@@ -1,0 +1,14 @@
+This is the installation guide in order to properly execute the codes related to the computer
+vision applications of the AVSE.
+
+-Download opencv (version >=3.0)
+-Download the opencv_contrib (the latest version containing the Aruco Module)
+
+-Install the following packages on your Unix OS:
+cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev
+
+-Build OpenCV with the extra modules
+$ cd <opencv_build_directory>
+$ cmake -DOPENCV_EXTRA_MODULES_PATH=<opencv_contrib>/modules <opencv_source_directory>
+$ make -j2
+$ sudo make install
