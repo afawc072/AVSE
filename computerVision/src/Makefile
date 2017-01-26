@@ -6,10 +6,10 @@ LDFLAGS += $(shell pkg-config --libs --static opencv)
 INC_DIR = -I/usr/local/include/opencv2 \
 	  -I/home/pi/opencv-3.2.0/build/include 
 
-all: ../bin/detect
+all: ../bin/detect_mod
 
-../bin/detect: detect_markers.o; $(CXX) $< -o $@ $(LDFLAGS)
+../bin/detect_mod: detect_mod.o; $(CXX) $< -o $@ $(LDFLAGS)
 
-detect_markers.o: detect_markers.cpp; $(CXX) $(INC_DIR) $< -o $@ $(CXXFLAGS) 
+detect_mod.o: detect_mod.cpp; $(CXX) $(INC_DIR) $< -o $@ $(CXXFLAGS) 
 
 clean: ; rm -f detect_markers.o ../bin/detect 
