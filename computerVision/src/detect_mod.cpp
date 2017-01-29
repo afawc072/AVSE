@@ -210,16 +210,23 @@ int main(int argc, char *argv[]) {
 	
 	if(key == 'c' && ids.size() > 0)
 	{
-	    cout << "translation x axis= " << 57.29*rvecs[0] << endl;
-	    cout << "translation y axis= " << tvecs[0]*20 << endl;
-	    
+	    cout << "rotation x axis= " << rvecs[0][0] << endl;
+	    cout << "translation x axis= " << tvecs[0][0] << endl;
+	    cout << "rotation y axis= " << rvecs[0][1] << endl;
+            cout << "translation y axis= " << tvecs[0][1] << endl;
+	    cout << "rotation z axis= " << rvecs[0][2] << endl;
+            cout << "translation z axis= " << tvecs[0][2] << endl;
+            
 	    cv::Mat R;
 	    cv::Rodrigues(rvecs, R); // R is 3x3
-
+	    R=tvecs*R;
+	    cout << " 11: " << R.at<double>(0,0) << " 12: " << R.at<double>(0,1) << " 13: " << R.at<double>(0,2) << endl;
+	    cout << " 21: " << R.at<double>(1,0) << " 22: " << R.at<double>(1,1) << " 23: " << R.at<double>(1,2) << endl;
+	    cout << " 31: " << R.at<double>(2,0) << " 32: " << R.at<double>(2,1) << " 33: " << R.at<double>(2,2) << endl;
 //	    R = R.t();  // rotation of inverse
 //	    tvecs = -R * tvecs; // translation of inverse
 
-	    cv::Mat T(4, 4, R.type()); // T is 4x4
+//	    cv::Mat T(4, 4, R.type()); // T is 4x4
 //	    T( cv::Range(0,3), cv::Range(0,3) ) = R * 1; // copies R into T
 //	    T( cv::Range(0,3), cv::Range(3,4) ) = tvecs * 1; // copies tvec into T
 	    // fill the last row of T (NOTE: depending on your types, use float or double)
