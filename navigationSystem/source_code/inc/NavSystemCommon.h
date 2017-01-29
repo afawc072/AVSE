@@ -21,6 +21,7 @@
 static const int GRID_CM = 10;
 static const int NUM_COL = 50;
 static const int NUM_ROW = 30;
+
 static const int dir = 8; //Number of possibles directions for the robot (4 or 8) 
 
 

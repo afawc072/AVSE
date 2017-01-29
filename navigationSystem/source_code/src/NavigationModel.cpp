@@ -157,14 +157,14 @@ void NavigationModel::updateRobotPosition(int aNewRow, int aNewCol)
  * @return validLocalization
  *
  *******************************************************************************/
-bool NavigationModel::localizeRobotInGrid(int tagID, double xdist_cm, double ydist_cm, double camServoAngle)
+bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double aZdist_cm, double aCamServoAngle)
 {
    bool validLocalization = false;
 
-   Position tagPos = mrGrid->getTagPositions()[tagID];
+   Position tagPos = mrGrid->getTagPositions()[aTagID];
 
-   vector<int> row4dir={0,0,1,-1};
-   vector<int> col4dir={1,-1,0,0};
+   vector<int> row4dir={0, 0, 1,-1};
+   vector<int> col4dir={1,-1, 0, 0};
 
    unsigned int i;
    for(i = 0 ; i <row4dir.size() ; i++)
@@ -174,34 +174,50 @@ bool NavigationModel::localizeRobotInGrid(int tagID, double xdist_cm, double ydi
          break;
       }
    }
-   cout << row4dir[i] <<","<< col4dir[i]<<endl;
 
+   int QGtoT[4][4]=  {{ 0 , 0 , 0 , tagPos.row*GRID_CM},
+                      { 0 , 0 , 0 , tagPos.column*GRID_CM},
+                      { 0 , 1 , 0 , 0},
+                      { 0 , 0 , 0 , 1}};;
    switch(i)
    {
       case 0:
-
+	 QGtoT[0][0] =-1;
+	 QGtoT[1][2] = 1;
       break;
 
       case 1:
-
+         QGtoT[0][0] = 1;
+         QGtoT[1][2] =-1;
       break;
 
       case 2:
+         QGtoT[1][0] = 1;
+         QGtoT[0][2] = 1;
 
       break;
 
       case 3:
+         QGtoT[1][0] =-1;
+         QGtoT[0][2] =-1;
 
       break;
 
       default:
+	// Do nothing
       break;
    }
 
-   updateRobotPosition(4,4);
+   int robotRow = round((QGtoT[0][0]*aXdist_cm + QGtoT[0][2]*aZdist_cm+QGtoT[0][3])/GRID_CM);
+   int robotCol = round((QGtoT[1][0]*aXdist_cm + QGtoT[1][2]*aZdist_cm+QGtoT[1][3])/GRID_CM);
+
+   cout << "tag is at " <<tagPos.row<<","<<tagPos.column<<", robot is at " <<robotRow <<","<<robotCol<<endl;
+
+   updateRobotPosition(robotRow,robotCol);
+
 
    // Calculate and set the robot's orientation in respect to the grid
-   double robotOrientation = camServoAngle - ((atan2(ydist_cm,xdist_cm)*180/PI));
+   double robotOrientation = aCamServoAngle - ((atan2(aZdist_cm,aXdist_cm)*180/PI));
    robotOrientation = 0;
    updateRobotOrientation(robotOrientation);
 

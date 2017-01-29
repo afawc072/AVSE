@@ -86,15 +86,15 @@ int main(int argc, const char **argv)
       bool foundTag;
       int tagID;
       double xdist;
-      double ydist;
+      double zdist;
 
       // Call openCV function
-      //foundTag = findATag(&tagID, &xdist, &ydist);
-      cout << "... (using ARToolKit) ... Oh! x(col) and y(row) distance to tag and tagID found and hardcoded here" <<endl;
+      //foundTag = findATag(&tagID, &xdist, &zdist);
+      cout << "... (using ARToolKit) ... Oh! x and z distance to tag and tagID found and hardcoded here" <<endl;
+      cout<<"Enter <tagID> <xdist> <zdist>:"<<endl;
+      cin >> tagID >> xdist >> zdist ;
+
       foundTag=true;
-      tagID=2;
-      xdist=-10;
-      ydist=-18;
 
       if(foundTag)
       {
@@ -106,7 +106,7 @@ int main(int argc, const char **argv)
          cin >> camServoAngle; 				// READ FROM ARD
 
          // Initialize the robot
-         model.localizeRobotInGrid(tagID, xdist, ydist, camServoAngle);
+         model.localizeRobotInGrid(tagID, xdist, zdist, camServoAngle);
 
          // 3. FIND POTENTIAL PATH TO DESTINATION
          model.calculatePathToDest();

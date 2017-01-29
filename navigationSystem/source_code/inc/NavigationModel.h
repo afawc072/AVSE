@@ -14,7 +14,7 @@ class NavigationModel{
 	bool destinationIsReached();
 
 
-        bool localizeRobotInGrid(int tagID, double xdist_cm, double ydist_cm, double camServoAngle);
+        bool localizeRobotInGrid(int aTagID, double aXdist_cm, double aZdist_cm, double aCamServoAngle);
 
 	// Update robot information
 	void updateRobotOrientation(double aOrientation);
