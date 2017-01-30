@@ -106,6 +106,26 @@ bool NavigationModel::destinationIsReached()
 
 
 
+
+/******************************************************************************* 
+ * clearPath
+ *
+ *      Clears the path stack and change the state of the path cell from P to F.
+ *
+ *
+ *******************************************************************************/
+void NavigationModel::clearPath()
+{
+   while(!mPathToDest.empty())
+   {
+      mrGrid->removePathCell(mPathToDest.top());
+      mPathToDest.pop();
+   }
+}
+
+
+
+
 /******************************************************************************* 
  * updateRobotOrientation
  *
@@ -365,11 +385,7 @@ bool NavigationModel::addObstacle(int aSensorID, float aAngle, float aDistance)
    {
       if( !(mrGrid->addObstacle(newObstacles[i])) )
       {
-         while(!mPathToDest.empty())
-	 {
-	    mrGrid->removePathCell(mPathToDest.top());
-	    mPathToDest.pop();
-         }
+	 clearPath();
 	 recalculatePath = true;
       }
    }

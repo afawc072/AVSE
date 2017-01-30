@@ -28,17 +28,6 @@ static const int dir = 8; //Number of possibles directions for the robot (4 or 8
 using namespace std;
 
 
-// Representing a position in the Grid
-struct Position
-{
-   Position();
-   Position(int aRow, int aCol);
-
-   int row;
-   int column;
-};
-
-
 
 // Define all the possible cell states
 typedef enum
@@ -71,6 +60,16 @@ static const cstate INITIAL_GRID[10][10] = {
 					   };
 */
 
+
+// Representing a position in the Grid
+struct Position
+{
+   Position();
+   Position(int aRow, int aCol);
+
+   int row;
+   int column;
+};
 
 
 // Struct to represent the robot. Contains it position and orientation

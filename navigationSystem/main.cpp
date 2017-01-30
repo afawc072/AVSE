@@ -42,6 +42,7 @@ static void moveRobot(NavigationModel * model)
       }
       else if(feedback == "STOP")
       {
+	 model->clearPath();
 	 break;
       }
       else
@@ -90,7 +91,7 @@ int main(int argc, const char **argv)
 
       // Call openCV function
       //foundTag = findATag(&tagID, &xdist, &zdist);
-      cout << "... (using ARToolKit) ... Oh! x and z distance to tag and tagID found and hardcoded here" <<endl;
+      cout << "... (using openCV) ... Oh! x and z distance to tag and tagID found and hardcoded here" <<endl;
       cout<<"Enter <tagID> <xdist> <zdist>:"<<endl;
       cin >> tagID >> xdist >> zdist ;
 
