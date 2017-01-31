@@ -1,1 +1,3 @@
-obj/protocol.o: src/protocol.cpp
+obj/protocol.o: src/protocol.cpp include/protocol.h
+
+include/protocol.h:
