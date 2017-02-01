@@ -10,9 +10,11 @@ TO-DO List:
 -Testing of Protocol(timing, utilization)
 -Optimization.
 
+IN PROGRESS:
+
+-protocol.cpp(writeP,readP);
+-protocl.h(errorType);
+
 DONE:
-
-
-MODIFICATIONS:
 
 

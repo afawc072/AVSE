@@ -31,7 +31,15 @@
 #include <vector>
 
 // IMPORTANT SETTINGS
-static const int NB_BYTES = 16;//Defined Buffer Size
+static const int NB_BYTES = 32;//Defined Buffer Size
+
+static const int SLEEP_S = 250;//Short Sleep(ms);
+static const int SLEEP_M = 500;//Medium Sleep(ms);
+static const int SLEEP_L = 1000;//Long Sleep(ms);
+
+static const char HEADER_START = '[';//Header Start;
+static const char HEADER_END = ']';//Header Stop;
+static const char HEADER_SPACE = ':';//Header Separation;
 
 using namespace std;
 
@@ -47,7 +55,7 @@ static  vector<string> PROTOCOL_DICT={"READY",
 					"REACHED",
 					"ADDOBS",
 					"open",
-                                        "STOP"};
+          "STOP"};
 
 typedef enum
 {
@@ -65,23 +73,32 @@ typedef enum
 	STOP,
 }command;
 
+typedef enum
+{
+	ERRORTC,//testConnection Error(Listen was not received).
+  ERRORCL,//Close Error;
+  ERRORINI,//Init Error;
+  ERRORWP,//ERROR by using function write(returned -1);
+
+}errorType;
 
 class Protocol
 {
 public:
 	Protocol();
-	int init();
-	bool send(command aCommand, string aInfoW  );
-
-	 bool receive(command *apCommand, string *apInfoR );
+	bool init(errorType& apE);
+  bool testConnection(errorType& apE);
+	bool send(command aCommand, string aInfoW, errorType& apE);
+  bool receive(command& apCommand, string& apInfoR, errorType& apE );
+  bool close(errorType& apE);
 
 private:
 
 	int fd;
 
-	bool writeP(command aCommand, string aInfoW  );
+	bool writeP(command aCommand, string aInfoW, errorType& apE);
 
-	bool readP(command *apCommand, string *apInfoR );
+	bool readP(command& apCommand, string& apInfoR, errorType& apE);
 };
 
 #endif /*PROTOCOL*/
