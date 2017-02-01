@@ -1,3 +1,28 @@
+/*******************************************************************************
+*
+* PROJET: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
+*
+* SECTION: Navigation System
+*
+* AUTHORS: Jean-Sebastien Fiset and Alexandre Fawcett
+*
+* DESCRIPTION:
+*
+*       Navigation System Common Information
+*
+* NOTES:
+*
+*	Includes the necessary modules, defines the constant variable used in this 
+* section of the project as well as the node class (for A* algorithm). The file also
+* defines the following struct:
+*
+*	- Position : contain a row and column index
+* 	- Robot : contain a Position and an orientation
+*
+*
+********************************************************************************/
+/** @file NavSystemCommon.h */
+
 #ifndef NAVSYSTEMCOMMON_H
 #define NAVSYSTEMCOMMON_H
 
@@ -22,14 +47,27 @@ static const int GRID_CM = 10;
 static const int NUM_COL = 50;
 static const int NUM_ROW = 30;
 
-static const int dir = 8; //Number of possibles directions for the robot (4 or 8) 
+static const int dir = 8; //Number of possibles directions for the robot (4 or 8)
 
 
 using namespace std;
 
 
-
-// Define all the possible cell states
+/*! \enum cstate
+*
+*   \brief Define the possible cell state for the grid
+*
+* Contain the elements:
+*
+*   W, representing a wall 
+*   T, representing a tag
+*   O, for an obstacle cell
+*   F, for a free cell
+*   P, for a path cell
+*   D, for a destination cell
+*   B, for a buffer cell
+*
+*******************************************************************************/
 typedef enum
 {
    W, // Wall
@@ -41,27 +79,18 @@ typedef enum
    B, // Buffer
 } cstate;
 
+
 // For printing purposes
 static const vector<char> cstate_names={'W','T','O','F','P','D','B'};
 
 
-/*
-static const cstate INITIAL_GRID[10][10] = {
-					   {W,W,W,W,W,W,W,W,W,W},
-					   {W,F,F,F,F,F,F,F,F,W},
-                                           {W,F,F,F,F,F,F,F,F,W},
-                                           {W,F,F,F,W,W,F,F,F,W},
-                                           {W,F,F,F,W,W,F,F,F,W},
-                                           {W,W,W,W,W,W,F,F,F,W},
-                                           {W,W,W,W,W,W,F,F,F,W},
-                                           {W,F,F,F,F,F,F,F,F,W},
-                                           {W,F,F,F,F,F,F,F,F,W},
-                                           {W,W,W,W,W,W,W,W,W,W}
-					   };
-*/
 
-
-// Representing a position in the Grid
+/*! \struct Position
+ *
+ * \brief Represents a position in the grid
+ *
+ *
+ *******************************************************************************/
 struct Position
 {
    Position();
@@ -72,7 +101,14 @@ struct Position
 };
 
 
-// Struct to represent the robot. Contains it position and orientation
+
+/*! \struct Robot
+ *
+ * \brief Represents a robot and contains a Position and an orientation in respect
+ * to the grid axis.
+ *
+ *
+ *******************************************************************************/
 struct Robot
 {
    Robot();
@@ -87,7 +123,10 @@ struct Robot
 
 
 
-// FOR A* ALGORITHM
+/*! \brief Defines a node in the grid for the A* algorithm
+ *
+ *
+ *******************************************************************************/
 class node
 {
    public:
@@ -106,6 +145,7 @@ class node
       void nextLevel(const int & aDirection);
 
       const int & estimate(const int & xDest, const int & yDest) const;
+
 
    private:
 

@@ -5,6 +5,7 @@ Position::Position()
 {
 }
 
+
 Position::Position(int aRow, int aCol)
 {
   row=aRow;

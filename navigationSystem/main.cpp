@@ -64,6 +64,8 @@ int main(int argc, const char **argv)
    // Initialize Navigation object
    NavigationModel model = NavigationModel(&myGrid);
 
+   // Open connection to arduino
+cout << cstate_names[W] << endl;
 
    // Main loop
    while(true)
@@ -75,7 +77,7 @@ int main(int argc, const char **argv)
 
       do
       {
-         cin >> goal_ix; 				// READ FROM LCD
+         cin >> goal_ix; 		 		// READ FROM LCD
       } while(!model.setDestination(goal_ix));
 
       cout << "STARTCAMSERVO" << endl; 			// WRITE TO ARD
@@ -91,7 +93,6 @@ int main(int argc, const char **argv)
 
       // Call openCV function
       //foundTag = findATag(&tagID, &xdist, &zdist);
-      cout << "... (using openCV) ... Oh! x and z distance to tag and tagID found and hardcoded here" <<endl;
       cout<<"Enter <tagID> <xdist> <zdist>:"<<endl;
       cin >> tagID >> xdist >> zdist ;
 

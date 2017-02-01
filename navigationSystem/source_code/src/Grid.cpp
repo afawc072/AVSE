@@ -1,5 +1,7 @@
 #include "Grid.h"
 
+
+
 Grid::Grid()
 {
    resetGrid();
@@ -134,7 +136,6 @@ void Grid::printGrid(){
    }
    printf("------------------------------------------------------\n");
 }
-
 
 
 /*
