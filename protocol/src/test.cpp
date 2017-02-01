@@ -2,20 +2,36 @@
 
 int main(){
 
-   Protocol test;
-   errorType error;
+  Protocol test;
+  errorType error;
+  string errorS;
+  string sendS;
+  string receiveS;
+  cout << "INIT TEST" << endl;
+  sleep(3000);
 
-   if(!test.init(error))
-   {
-      // error
-   }
+  if(!test.init(error))
+  {
+    errorS=PROTOCOL_ERR[error]
+    cout << errorS << endl;
+  }
+  cout << "SEND ANGLE" << endl;
+  sleep(3000);
+  sendS="5";
+  if(!test.send(CAMANGLE,sendS,error))
+  {
+    errorS = PROTOCOL_DICT[aCommand];
+    cout << errorS << endl;
+  }
+  cout << "RECEIVE CONFG" << endl;
+  sleep(3000);
 
-   cout << "waiting..." << endl;
+  //if(!test.receive(CAMANGLE,receiveS,error))
+  //{
+  //  errorS = PROTOCOL_DICT[aCommand];
+  //  cout << errorS << endl;
+  //}
 
-   if(!test.send(OPEN,"",error))
-   {
-      // error
-   }
 /*
 command rCommand;
 string rInfo;

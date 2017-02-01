@@ -160,9 +160,10 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
     bufw[(i+1)]=bufTempCmd[i];
   }
 
+  bufw[i]=HEADER_SPACE;
+
   if(flagE)
   {
-    bufw[i]=HEADER_SPACE;
     int j=0;
     for(j=0;j<sizeInfo;j++,i++)
     {

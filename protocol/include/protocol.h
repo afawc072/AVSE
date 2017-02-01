@@ -49,13 +49,12 @@ static  vector<string> PROTOCOL_DICT={"READY",
 					"RCVD",
 					"END",
 					"WAIT",
-					"STARTCAM",
-					"STOPCAM",
+					"CAMANGLE",
 					"NEXTVEC",
 					"REACHED",
 					"ADDOBS",
-					"open",
-          "STOP"};
+					"STOP",
+					"ERROR",};
 
 typedef enum
 {
@@ -64,14 +63,18 @@ typedef enum
 	RCVD,
 	END,
 	WAIT,
-	STARTCAM,
-	STOPCAM,
+	CAMANGLE
 	NEXTVEC,
 	REACHED,
 	ADDOBS,
-	OPEN,
 	STOP,
+	ERROR,
 }command;
+
+static  vector<string> PROTOCOL_ERR={"ERRORTC",
+					"ERRORCL",
+					"ERRORINI",
+					"ERRORWP",};
 
 typedef enum
 {
