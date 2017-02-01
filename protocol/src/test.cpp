@@ -12,7 +12,7 @@ int main(){
 
   if(!test.init(error))
   {
-    errorS=PROTOCOL_ERR[error]
+    errorS=PROTOCOL_ERR[error];
     cout << errorS << endl;
   }
   cout << "SEND ANGLE" << endl;
@@ -20,7 +20,7 @@ int main(){
   sendS="5";
   if(!test.send(CAMANGLE,sendS,error))
   {
-    errorS = PROTOCOL_DICT[aCommand];
+    errorS = PROTOCOL_ERR[error];
     cout << errorS << endl;
   }
   cout << "RECEIVE CONFG" << endl;

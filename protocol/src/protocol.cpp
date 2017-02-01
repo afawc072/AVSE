@@ -198,7 +198,81 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
  *******************************************************************************/
 bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
 {
-  return true;
+  bool flagR =true;
+  char bufr[NB_BYTES];
+  char bufCmd[NB_BYTES];
+  char bufInfo[NB_BYTES];
+
+  int ret;
+  int i=0;
+  int j=0;
+
+  string cmd;
+  string info;
+
+  ret=read(fd,bufr,NB_BYTES);
+  //error for read
+  if(ret==-1)
+  {
+    apE=ERRORR;
+    return false;
+  }
+  else
+  {
+    //Parse the string;
+    if(bufr[0]!='['){
+      apE=ERRORH;
+      return false;
+    }
+    else
+    {
+      i++;
+      j=0;
+      while(bufr[i]!=':')
+      {
+        if(i==sizeof(bufr));
+        {
+          apE=ERRORS;
+          return false;
+        }
+          bufCmd[j]=bufr[i];
+          j++;
+          i++;
+      }
+      i++;
+      cmd=string(bufCmd);
+      flagR=findCommand(cmd, apCommand);
+
+      if(!flagR)
+      {
+        apE=ERRORS;
+        return false;
+      }
+      else if(bufr[i]==']')
+      {
+        return flagR;
+      }
+      else
+      {
+        j=0;
+        while(bufr[i]!=']')
+        {
+          if(i==sizeof(bufr));
+          {
+            apE=ERRORS;
+            return false;
+          }
+            bufInfo[j]=bufr[i];
+            j++;
+            i++;
+        }
+        apInfoR=string(bufCmd);
+        return flagR;
+      }
+
+    }
+
+  }
 }
 
 /*******************************************************************************
@@ -219,4 +293,19 @@ bool Protocol::closeP(errorType &apE)
     apE=ERRORCL;
     return false;
   }
+}
+
+bool Protocol::findCommand(string aCmd, command &arCmd)
+{
+   bool validCmd = false;
+
+   for( unsigned int ix = 0 ; ix < PROTOCOL_DICT.size(); ix++ )
+   {
+      if( aCmd == PROTOCOL_DICT[ix] )
+      {
+         arCmd = (command) ix;
+         validCmd = true;
+      }
+   }
+   return validCmd;
 }

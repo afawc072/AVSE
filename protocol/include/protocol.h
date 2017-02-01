@@ -50,7 +50,7 @@ static  vector<string> PROTOCOL_DICT={"READY",
 					"END",
 					"WAIT",
 					"CAMANGLE",
-					"NEXTVEC",
+					"NEXT",
 					"REACHED",
 					"ADDOBS",
 					"STOP",
@@ -63,8 +63,8 @@ typedef enum
 	RCVD,
 	END,
 	WAIT,
-	CAMANGLE
-	NEXTVEC,
+	CAMANGLE,
+	NEXT,
 	REACHED,
 	ADDOBS,
 	STOP,
@@ -74,7 +74,10 @@ typedef enum
 static  vector<string> PROTOCOL_ERR={"ERRORTC",
 					"ERRORCL",
 					"ERRORINI",
-					"ERRORWP",};
+					"ERRORWP",
+          "ERRORR",
+          "ERRORH",
+          "ERRORS",};
 
 typedef enum
 {
@@ -82,6 +85,9 @@ typedef enum
   ERRORCL,//Close Error;
   ERRORINI,//Init Error;
   ERRORWP,//ERROR by using function write(returned -1);
+  ERRORR,
+  ERRORH,
+  ERRORS,
 
 }errorType;
 
@@ -95,6 +101,7 @@ public:
   bool receive(command &apCommand, string &apInfoR, errorType &apE );
   bool closeP(errorType &apE);
 
+
 private:
 
 	int fd;
@@ -102,6 +109,8 @@ private:
 	bool writeP(command aCommand, string aInfoW, errorType &apE);
 
 	bool readP(command &apCommand, string &apInfoR, errorType &apE);
+
+  bool findCommand(string aCmd, command &arCmd);
 };
 
 #endif /*PROTOCOL*/
