@@ -2,11 +2,20 @@
 
 int main(){
 
-Protocol test;
-test.init();
-cout << "waiting..." << endl;
+   Protocol test;
+   errorType error;
 
-bool t = test.send(OPEN,"");
+   if(!test.init(error))
+   {
+      // error
+   }
+
+   cout << "waiting..." << endl;
+
+   if(!test.send(OPEN,"",error))
+   {
+      // error
+   }
 /*
 command rCommand;
 string rInfo;

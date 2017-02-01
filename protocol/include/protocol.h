@@ -86,19 +86,19 @@ class Protocol
 {
 public:
 	Protocol();
-	bool init(errorType& apE);
-  bool testConnection(errorType& apE);
-	bool send(command aCommand, string aInfoW, errorType& apE);
-  bool receive(command& apCommand, string& apInfoR, errorType& apE );
-  bool close(errorType& apE);
+	bool init(errorType &apE);
+  bool testConnection(errorType &apE);
+	bool send(command aCommand, string aInfoW, errorType &apE);
+  bool receive(command &apCommand, string &apInfoR, errorType &apE );
+  bool closeP(errorType &apE);
 
 private:
 
 	int fd;
 
-	bool writeP(command aCommand, string aInfoW, errorType& apE);
+	bool writeP(command aCommand, string aInfoW, errorType &apE);
 
-	bool readP(command& apCommand, string& apInfoR, errorType& apE);
+	bool readP(command &apCommand, string &apInfoR, errorType &apE);
 };
 
 #endif /*PROTOCOL*/
