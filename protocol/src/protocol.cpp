@@ -25,13 +25,17 @@ Protocol::Protocol()
 
 bool Protocol::init(errorType &apE)
 {
+  
   //Open the File Directory /dev/ttyACM0 (Arduino)
   fd=open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
   //This is done twice because we had issues...
   fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
-
   //ADD Error Check;
-
+  if(fd==-1)
+  {
+    apE=ERRORINI;
+    return false; 
+  }
   return true;
 }
 
@@ -54,13 +58,16 @@ bool Protocol::testConnection(errorType &apE)
   The following logic sends the ready command to the arduino, and in the case
   the write is successful, we receive LISTEN, hopefully.
   */
+  cout << "WRITING TO ARDUINO" << endl;
   if(writeP(cmd,nUll,apE))
   {
     //Sleep Function to ensure proper synchronization?!?
-    usleep(SLEEP_S);
+    sleep(SLEEP_S);
+    cout << "WRITEP OK" << endl;
     if(readP(rcv,nUll,apE))
     {
       //The connection test shoudl return LISTEN by the ARDUINO.
+      cout << "READP OK" << endl;
       if(rcv==LISTEN)
       {
         flagTC=true;
@@ -124,8 +131,9 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
 {
   //Define the command received as a String
   string cmd = PROTOCOL_DICT[aCommand];
+  sleep(SLEEP_M);
   //Size of the command string
-  int sizeCmd = sizeof(cmd);
+  int sizeCmd = cmd.length();
   int sizeInfo;
   //flag for write error
   bool flagE=false;
@@ -136,17 +144,19 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
   char bufw[NB_BYTES];
   char bufTempCmd[sizeCmd];
   char* bufTempInfo;
-
-  //Transform the string to a char[]
-  strncpy(bufTempCmd, cmd.c_str(), sizeCmd);
-
+  fill_n(bufw,NB_BYTES,0);
+  fill_n(bufw,NB_BYTES,0);
+  //Transform the string to a char[]. Size cmd increase because % appeared
+  strncpy(bufTempCmd, cmd.c_str(), (sizeCmd+1));
+  cout << "STRNCPY " << bufTempCmd << " SIZE" << sizeCmd << endl;
   //Check if Info is NULL and create its char array if non-empty.
   if(aInfoW!="")
   {
     flagE=true;
-    sizeInfo = sizeof(aInfoW);
-    bufTempInfo= (char*) malloc(sizeInfo);
+    sizeInfo = aInfoW.length();
+    bufTempInfo= new char[sizeInfo];
     strncpy(bufTempInfo, aInfoW.c_str(), sizeInfo);
+    cout << "INFO " << bufTempInfo << endl;
   }
 
   /*
@@ -155,25 +165,29 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
   //header
   bufw[0]=HEADER_START;
   int i;
-  for(i=0;i<=sizeCmd;i++)
+  for(i=0;i<sizeCmd;i++)
   {
     bufw[(i+1)]=bufTempCmd[i];
   }
-
+ i++;
   bufw[i]=HEADER_SPACE;
-
+  cout << "FLAGe" << flagE << endl;
   if(flagE)
   {
+    cout << "GETS TO FLAG " << bufw << endl; 
     int j=0;
-    for(j=0;j<sizeInfo;j++,i++)
+    for(j=0;j<sizeInfo;j++)
     {
       bufw[(i+1)]=bufTempInfo[j];
+      i++;
+      cout << "BUFTEMPINFO " << bufTempInfo[j] << endl;
     }
   }
-
+  i++;
   bufw[i]=HEADER_END;
-
-	int w=write(fd, bufw, NB_BYTES);
+  cout << "BUFW " << bufw << endl;
+  sleep(SLEEP_L);
+  int w=write(fd, bufw, NB_BYTES);
   //ERROR RETURN
   if(w!=-1)
   {
@@ -203,14 +217,21 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
   char bufCmd[NB_BYTES];
   char bufInfo[NB_BYTES];
 
+  fill_n(bufr,NB_BYTES,0);
+  fill_n(bufCmd,NB_BYTES,0);
+  fill_n(bufInfo,NB_BYTES,0);
+
   int ret;
   int i=0;
   int j=0;
 
   string cmd;
   string info;
-
+//troubleshoot
+  sleep(SLEEP_S);
   ret=read(fd,bufr,NB_BYTES);
+  cout << "READING " << ret << "BUFR" << bufr << endl;
+  
   //error for read
   if(ret==-1)
   {
@@ -220,7 +241,7 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
   else
   {
     //Parse the string;
-    if(bufr[0]!='['){
+    if(bufr[i]!=HEADER_START){
       apE=ERRORH;
       return false;
     }
@@ -228,37 +249,43 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
     {
       i++;
       j=0;
-      while(bufr[i]!=':')
+      while(bufr[i]!=HEADER_SPACE)
       {
-        if(i==sizeof(bufr));
+        if(i==(NB_BYTES-1))
         {
+          cout << "NO HEADER_SPACE " << endl;
           apE=ERRORS;
           return false;
         }
           bufCmd[j]=bufr[i];
-          j++;
+	j++;
           i++;
       }
       i++;
+     cout << bufCmd << "BLBLA" << endl;
       cmd=string(bufCmd);
+      
+cout << cmd << "CMON" << endl;
       flagR=findCommand(cmd, apCommand);
 
       if(!flagR)
       {
         apE=ERRORS;
+        cout << "FIND COMMAND ERROR " << endl;
         return false;
       }
-      else if(bufr[i]==']')
+      else if(bufr[i]==HEADER_END)
       {
         return flagR;
       }
       else
       {
         j=0;
-        while(bufr[i]!=']')
+        while(bufr[i]!=HEADER_END)
         {
           if(i==sizeof(bufr));
           {
+            cout << "NO HEADER_END " << endl;
             apE=ERRORS;
             return false;
           }
@@ -309,3 +336,5 @@ bool Protocol::findCommand(string aCmd, command &arCmd)
    }
    return validCmd;
 }
+
+

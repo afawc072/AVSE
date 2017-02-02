@@ -8,23 +8,27 @@ int main(){
   string sendS;
   string receiveS;
   cout << "INIT TEST" << endl;
-  sleep(3000);
+  //cout.flush();
+  sleep(2);
 
   if(!test.init(error))
   {
     errorS=PROTOCOL_ERR[error];
     cout << errorS << endl;
+    //cout.flush();
   }
   cout << "SEND ANGLE" << endl;
-  sleep(3000);
-  sendS="5";
+  sleep(2);
+  sendS="10";
+
   if(!test.send(CAMANGLE,sendS,error))
   {
     errorS = PROTOCOL_ERR[error];
     cout << errorS << endl;
   }
   cout << "RECEIVE CONFG" << endl;
-  sleep(3000);
+  //cout.flush();
+  sleep(2);
 
   //if(!test.receive(CAMANGLE,receiveS,error))
   //{
