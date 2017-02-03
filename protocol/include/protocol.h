@@ -59,8 +59,8 @@ static  vector<string> PROTOCOL_DICT={"READY",
 
 typedef enum
 {
-	READY,
-	LISTEN,
+	READY, //command send by the function testConnection to the arduino
+	LISTEN,//expected command received by the arduino in testConnection.
 	RCVD,
 	END,
 	WAIT,
@@ -86,8 +86,8 @@ typedef enum
   ERRORCL,//Close Error;
   ERRORINI,//Init Error;
   ERRORWP,//ERROR by using function write(returned -1);
-  ERRORR,
-  ERRORH,
+  ERRORR,//readP error:
+  ERRORH,//
   ERRORS,
 
 }errorType;

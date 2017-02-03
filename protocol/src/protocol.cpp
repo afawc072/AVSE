@@ -23,26 +23,34 @@ Protocol::Protocol()
 {
 }
 
+/*******************************************************************************
+ * init
+ *
+ * 	Open the connection to the arduino by opening a file descriptor to it.
+ *  A bash code executing a python file is executed beforehand to lock
+ *  the proper serial parameters in the Pi in order to read the data.
+ *
+ *******************************************************************************/
 bool Protocol::init(errorType &apE)
 {
+  //System call to run the bash script executing the python code.
   system("bin/pybaud.sh");
 
   struct termios toptions;
-  
-  //Open the File Directory /dev/ttyACM0 (Arduino)
+
+  /*
+  Open the File Directory /dev/ttyACM0 (Arduino). The file descriptor "fd" has 3 settings:
+  O_RDWR: Open for reading and writing
+  O_NOCTTY: The terminal doesn't become the controlling device
+  O_NONBLOCK: Please read further @ http://pubs.opengroup.org/onlinepubs/009695399/functions/open.html
+  */
   fd=open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
-  
-  tcgetattr(fd,&toptions);
-  cfsetispeed(&toptions, B9600);
-  cfsetospeed(&toptions, B9600);
 
-  tcsetattr(fd, TCSANOW, &toptions);
-
-  //ADD Error Check;
+  //Error Check: if the file can't be opened, -1 is set to fd.
   if(fd==-1)
   {
     apE=ERRORINI;
-    return false; 
+    return false;
   }
   return true;
 }
@@ -51,6 +59,7 @@ bool Protocol::init(errorType &apE)
  * testConnection
  *
  * 	Function to ensure that the arduino is ready to receive data
+ *  The command READY is sent and we expect to read LISTEN.
  *
  *******************************************************************************/
 bool Protocol::testConnection(errorType &apE)
@@ -70,9 +79,13 @@ bool Protocol::testConnection(errorType &apE)
   {
     //Sleep Function to ensure proper synchronization?!?
     sleep(SLEEP_S);
+    //TROUBLESHOOTING by printing to the terminal.
     cout << "WRITEP OK" << endl;
+
+    //Condition if readP is done.
     if(readP(rcv,nUll,apE))
     {
+      //Sleep to allow the arduino to write back to the serial when READY is sent
       sleep(SLEEP_S);
       //The connection test shoudl return LISTEN by the ARDUINO.
       cout << "READP OK" << endl;
@@ -82,7 +95,7 @@ bool Protocol::testConnection(errorType &apE)
       }
       else
       {
-       apE=ERRORTC;
+       apE=ERRORTC; //the reference to the error is set ERRORTC.
       }
     }
   }
@@ -93,7 +106,7 @@ bool Protocol::testConnection(errorType &apE)
 /*******************************************************************************
  * Send
  *
- * 	Function to be by other c++ programs to send data to arduino
+ * 	Function to be called by other c++ programs to send data to arduino
  *
  *******************************************************************************/
 bool Protocol::send(command aCommand, string aInfoW, errorType &apE )
@@ -124,6 +137,11 @@ bool Protocol::receive(int aNumAttempts, int aDelay, command& apCommand, string 
   bool flagR=false;
   int counter = 0;
 
+  /*
+  Loop to be executed when receiving information to wait for a successful read.
+  each loop is characterized by a delay defined by the program calling this function, including
+  the number of loop to be executed.
+  */
   while( counter < aNumAttempts && !flagR)
   {
      if(readP(apCommand, apInfoR, apE))
@@ -145,7 +163,6 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
 {
   //Define the command received as a String
   string cmd = PROTOCOL_DICT[aCommand];
-  sleep(SLEEP_M);
   //Size of the command string
   int sizeCmd = cmd.length();
   int sizeInfo;
@@ -158,13 +175,17 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
   char bufw[NB_BYTES];
   char bufTempCmd[sizeCmd];
   char* bufTempInfo;
+
+  //Fill in the buffers array with 0's so that nill array postions are't filled with non-defined encoding symbols.
+
   fill_n(bufw,NB_BYTES,0);
   fill_n(bufw,NB_BYTES,0);
-  //Transform the string to a char[]. Size cmd increase because % appeared
+  //Transform the string to a char[]. Size cmd increase because % appears (No explanation).
   strncpy(bufTempCmd, cmd.c_str(), (sizeCmd+1));
   //Check if Info is NULL and create its char array if non-empty.
   if(aInfoW!="")
   {
+    //flag set for further use(to send the info also).
     flagE=true;
     sizeInfo = aInfoW.length();
     bufTempInfo= new char[sizeInfo];
@@ -240,7 +261,7 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
   sleep(SLEEP_S);
   ret=read(fd,bufr,NB_BYTES);
   cout <<"BUFR " << bufr << endl;
-  
+
   //error for read
   if(ret==-1)
   {
@@ -271,7 +292,7 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
       }
       i++;
       cmd=string(bufCmd);
-      
+
       flagR=findCommand(cmd, apCommand);
 
       if(!flagR)
