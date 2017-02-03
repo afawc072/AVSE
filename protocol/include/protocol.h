@@ -28,14 +28,15 @@
 #include <termios.h>
 #include <string>
 #include <cstring> // for strncpy
+#include <sstream> //ostringstream
 #include <vector>
 
 // IMPORTANT SETTINGS
-static const int NB_BYTES = 32;//Defined Buffer Size
+static const int NB_BYTES = 34;//Defined Buffer Size
 
-static const int SLEEP_S = 250;//Short Sleep(ms);
-static const int SLEEP_M = 500;//Medium Sleep(ms);
-static const int SLEEP_L = 1000;//Long Sleep(ms);
+static const int SLEEP_S = 1;//Short Sleep(ms);
+static const int SLEEP_M = 1.5;//Medium Sleep(ms);
+static const int SLEEP_L = 2;//Long Sleep(ms);
 
 static const char HEADER_START = '[';//Header Start;
 static const char HEADER_END = ']';//Header Stop;
@@ -98,7 +99,7 @@ public:
 	bool init(errorType &apE);
   bool testConnection(errorType &apE);
 	bool send(command aCommand, string aInfoW, errorType &apE);
-  bool receive(command &apCommand, string &apInfoR, errorType &apE );
+  bool receive(int aNumAttempts, int aDelay, command &apCommand, string &apInfoR, errorType &apE );
   bool closeP(errorType &apE);
 
 
