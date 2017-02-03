@@ -65,7 +65,6 @@ int main(int argc, const char **argv)
    NavigationModel model = NavigationModel(&myGrid);
 
    // Open connection to arduino
-cout << cstate_names[W] << endl;
 
    // Main loop
    while(true)

@@ -15,12 +15,12 @@
 *
 *
 ********************************************************************************/
-
+/** @file NavigationModel.cpp*/
 
 #include "NavigationModel.h"
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * NavigationModel
  *
  * 	Default constructor
@@ -55,7 +55,7 @@ NavigationModel::NavigationModel(Grid *apGrid)
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * setDestination
  *
  * 	Sets the desired final destination of the model. Changes the flag to indicate
@@ -107,7 +107,7 @@ bool NavigationModel::destinationIsReached()
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * clearPath
  *
  *      Clears the path stack and change the state of the path cell from P to F.
@@ -126,7 +126,7 @@ void NavigationModel::clearPath()
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * updateRobotOrientation
  *
  * 	Sets the robot's orientation
@@ -142,7 +142,7 @@ void NavigationModel::updateRobotOrientation(double aOrientation)
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * updateRobotPosition
  *
  *      Sets the robot's position (row and column)
@@ -159,14 +159,14 @@ void NavigationModel::updateRobotPosition(int aNewRow, int aNewCol)
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * localizeRobotInGrid
  *
  *      Knowing the tagID that was found by the camera and the x and z distance of
  * the robot in respect to the tag, we can localize the robot in the grid. The first
- * step is to find the transformation matrix from the grid to the tag. The tag 
+ * step is to find the transformation matrix from the grid to the tag. The tag
  * frame is known by finding out where it is pointing (right, left, down, up) according
- * to the grid. With that information, we can use the right transformation matrix and 
+ * to the grid. With that information, we can use the right transformation matrix and
  * find the row and column where the robot is located.
  *
  * @param  [in]  aTagID
@@ -238,7 +238,7 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
 
    // Calculate and set the robot's orientation in respect to the grid
    double robotOrientation = aCamServoAngle - ((atan2(aZdist_cm,aXdist_cm)*180/PI));
-   robotOrientation = 0;
+   robotOrientation = 0; // Temporary
    updateRobotOrientation(robotOrientation);
 
    return validLocalization;
@@ -249,7 +249,7 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
 /*******************************************************************************
  * nextPosition
  *
- *      Fills the pointer sent as argument with the next position (row and column in 
+ *      Fills the pointer sent as argument with the next position (row and column in
  *  respect to the grid) in the path. Returns true if a next position vector is found.
  *
  * @param  [out]  apPos
@@ -264,7 +264,7 @@ bool NavigationModel::nextPosition(Position *apPos)
    if(!mPathToDest.empty())
    {
       knownNextPos = true;
-      printf("nextPos is %i, %i\n",mPathToDest.top().row, mPathToDest.top().column); 
+      printf("nextPos is %i, %i\n",mPathToDest.top().row, mPathToDest.top().column);
       apPos->row = mPathToDest.top().row;
       apPos->column = mPathToDest.top().column;
       mPathToDest.pop();
@@ -286,10 +286,10 @@ bool NavigationModel::nextPosition(Position *apPos)
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * nextPositionVector
  *
- *	
+ *
  *
  * @param  [out]  aNextPosVec
  *
@@ -300,14 +300,20 @@ bool NavigationModel::nextPositionVector(vector<float> *aNextPosVec)
 {
    bool knownNextPosVector = false;
    Position nextPos;
+
+   // Get the next position
    if(nextPosition(&nextPos))
    {
+      // Calculate the position vector in respect to the grid
       vector<float> posVecGrid;
       posVecGrid.push_back(nextPos.row - mRobot.mCurrentPosition.row);
       posVecGrid.push_back(nextPos.column - mRobot.mCurrentPosition.column);
 
+      // Transform position vector to become in respect to the robot
       vector<float> tempVec;
       tempVec = transMatGtoR(posVecGrid);
+
+      // Push back results in the pointed vector
       aNextPosVec->push_back(tempVec[0]*GRID_CM);
       aNextPosVec->push_back(tempVec[1]*GRID_CM);
 
@@ -325,7 +331,7 @@ bool NavigationModel::nextPositionVector(vector<float> *aNextPosVec)
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * calculatePathToDest
  *
  *      Finds the path to the selected destination using the A* algorithm private
@@ -337,8 +343,8 @@ bool NavigationModel::nextPositionVector(vector<float> *aNextPosVec)
  *******************************************************************************/
 bool NavigationModel::calculatePathToDest()
 {
+   bool mPathFound = false;
 
-  bool mPathFound = false;
    if(mKnownDestination)
    {
       // A* algorithm
@@ -356,10 +362,11 @@ bool NavigationModel::calculatePathToDest()
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * addObstacle
  *
- *
+ * ... to be completed ... for now adds an obstacle base of aAngle (for row) and
+ * aDistance (for column).
  *
  * @param  [in]  aSensorID
  * @param  [in]  aAngle
@@ -385,8 +392,8 @@ bool NavigationModel::addObstacle(int aSensorID, float aAngle, float aDistance)
    {
       if( !(mrGrid->addObstacle(newObstacles[i])) )
       {
-	 clearPath();
-	 recalculatePath = true;
+	       clearPath();
+	       recalculatePath = true;
       }
    }
 
@@ -401,10 +408,10 @@ bool NavigationModel::addObstacle(int aSensorID, float aAngle, float aDistance)
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * print
  *
- *      Prints the destination selected as well as the current grid and the current 
+ *      Prints the destination selected as well as the current grid and the current
  * robot position and orientation. For debugging purposes.
  *
  *
@@ -421,11 +428,11 @@ void NavigationModel::print()
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * transMatGtoR
  *
  *      Implementation of a 2D transformation from the grid to the robot without
- * taking into account the position. We can send a vector in respect to the grid 
+ * taking into account the position. We can send a vector in respect to the grid
  * and the function will return the vector coordinates in respect to the robot.
  *
  * @param  [out]  aVectorGrid
@@ -449,7 +456,7 @@ vector<float> NavigationModel::transMatGtoR(vector<float> aVectorGrid)
 
 
 
-/******************************************************************************* 
+/*******************************************************************************
  * aStarAlgorithm
  *
  *   This algorithm was modified from the following open source c++ code:
@@ -498,7 +505,7 @@ bool NavigationModel::aStarAlgorithm()
     {
         // get the current node w/ the highest priority
         // from the list of open nodes
-        n0=new node( pq[pqi].top().getxPos(), pq[pqi].top().getyPos(), 
+        n0=new node( pq[pqi].top().getxPos(), pq[pqi].top().getyPos(),
                      pq[pqi].top().getLevel(), pq[pqi].top().getPriority());
 
         x=n0->getxPos();
@@ -530,7 +537,7 @@ bool NavigationModel::aStarAlgorithm()
             // garbage collection
             delete n0;
             // empty the leftover nodes
-            while(!pq[pqi].empty()) pq[pqi].pop();           
+            while(!pq[pqi].empty()) pq[pqi].pop();
             return true;
         }
 
@@ -543,7 +550,7 @@ bool NavigationModel::aStarAlgorithm()
                 || closed_nodes_map[xdx][ydy]==1))
             {
                // generate a child node
-                m0=new node( xdx, ydy, n0->getLevel(), 
+                m0=new node( xdx, ydy, n0->getLevel(),
                              n0->getPriority());
                 m0->nextLevel(i);
                 m0->updatePriority(mFinalPosition.row, mFinalPosition.column);
@@ -567,7 +574,7 @@ bool NavigationModel::aStarAlgorithm()
                     // by emptying one pq to the other one
                     // except the node to be replaced will be ignored
                     // and the new node will be pushed in instead
-                    while(!(pq[pqi].top().getxPos()==xdx && 
+                    while(!(pq[pqi].top().getxPos()==xdx &&
                            pq[pqi].top().getyPos()==ydy))
                     {
                         pq[1-pqi].push(pq[pqi].top());

@@ -12,9 +12,8 @@ CPP_SOURCES=$(SRC_DIR)/Grid.cpp \
 	   main.cpp
 
 
-SRC_DIR=source_code/src
-INC_DIR=-I source_code/inc 
-LIB_DIR= artoolkit5/lib
+SRC_DIR=src
+INC_DIR=-I inc 
 OBJ_DIR= obj
 BIN_DIR= bin
 

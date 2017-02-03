@@ -3,16 +3,18 @@
 
 
 /*! \brief Defines the navigation model of the AVSE
- * 
+ *
  *  This class contains a grid and a robot and is responsible for the path finding
  * part of the project. By setting the final desired destination and localizing the
  * robot within the grid, the quickest path can be calculated. If a obstacle is
  * detected along the way, it can be added to the occupancy grid and a recalculation
- * of the path occurs if the obstacles is in the path of the robot. Every time a 
+ * of the path occurs if the obstacles is in the path of the robot. Every time a
  * cell is reached, the next position vector can be sent.
  *
  *
  *******************************************************************************/
+/** @file NavigationModel.h */
+
 class NavigationModel{
 
     public:
