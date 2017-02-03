@@ -1,27 +1,28 @@
 /*******************************************************************************
 *
-* PROJET: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
+* PROJECT: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
 *
 * SECTION: Navigation System
 *
-* AUTHORS: Jean-Sebastien Fiset and Alexandre Fawcett
+* AUTHOR: Jean-Sebastien Fiset
 *
 * DESCRIPTION:
 *
-*       Navigation System Common Information
+*       Navigation System Common Header File
 *
 * NOTES:
 *
-*	Includes the necessary modules, defines the constant variable used in this 
+*	Includes the necessary modules, defines the constant variable used in this
 * section of the project as well as the node class (for A* algorithm). The file also
 * defines the following struct:
 *
-*	- Position : contain a row and column index
+*	  - Position : contain a row and column index
 * 	- Robot : contain a Position and an orientation
 *
 *
 ********************************************************************************/
 /** @file NavSystemCommon.h */
+
 
 #ifndef NAVSYSTEMCOMMON_H
 #define NAVSYSTEMCOMMON_H
@@ -59,7 +60,7 @@ using namespace std;
 *
 * Contain the elements:
 *
-*   W, representing a wall 
+*   W, representing a wall
 *   T, representing a tag
 *   O, for an obstacle cell
 *   F, for a free cell
@@ -125,11 +126,15 @@ struct Robot
 
 /*! \brief Defines a node in the grid for the A* algorithm
  *
+ *  This class was taken from the open source c++ code :
+ *  http://code.activestate.com/recipes/577457-a-star-shortest-path-algorithm/history/4/
+ *
  *
  *******************************************************************************/
 class node
 {
    public:
+
       node(int xp, int yp, int aLevel, int aPriority);
 
       int getxPos() const;
@@ -150,6 +155,7 @@ class node
    private:
 
       int xPos;
+
       int yPos;
 
       int level;

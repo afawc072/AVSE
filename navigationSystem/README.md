@@ -13,10 +13,13 @@ For the Tags and Destination IDs, these are defined when reading the Grid.txt fi
 To run the simulation, run the NavSystem executable (type ./bin/NavSystem from this directory) and input the desired destination ID
 
 
-
 ├── bin
 │   └── NavSystem
 ├── Grid.txt
+├── inc
+│   ├── Grid.h
+│   ├── NavigationModel.h
+│   └── NavSystemCommon.h
 ├── main.cpp
 ├── Makefile
 ├── obj
@@ -29,13 +32,8 @@ To run the simulation, run the NavSystem executable (type ./bin/NavSystem from t
 │   ├── NavSystemCommon.o
 │   └── Robot.d
 ├── README.md
-└── source_code
-    ├── inc
-    │   ├── Grid.h
-    │   ├── NavigationModel.h
-    │   └── NavSystemCommon.h
-    └── src
-        ├── Grid.cpp
-        ├── NavigationModel.cpp
-        └── NavSystemCommon.cpp
+└── src
+    ├── Grid.cpp
+    ├── NavigationModel.cpp
+    └── NavSystemCommon.cpp
 

@@ -1,14 +1,14 @@
 /*******************************************************************************
 *
-* PROJET: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
+* PROJECT: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
 *
 * SECTION: Navigation System
 *
-* AUTHORS: Jean-Sebastien Fiset and Alexandre Fawcett
+* AUTHOR: Jean-Sebastien Fiset
 *
 * DESCRIPTION:
 *
-*	Navigation Model
+*	Navigation Model Function Implementation
 *
 * NOTES:
 *
@@ -70,7 +70,7 @@ bool NavigationModel::setDestination(int aDestinationID)
 {
    bool validDest = false;
 
-   if(aDestinationID >=0 && aDestinationID < (int) mrGrid->getDestPositions().size())
+   if( aDestinationID >=0 && aDestinationID < (int) mrGrid->getDestPositions().size() )
    {
       mFinalPosition = mrGrid->getDestPositions()[aDestinationID];
       mKnownDestination = true;
@@ -95,8 +95,8 @@ bool NavigationModel::destinationIsReached()
 {
    bool destinationReached = false;
 
-   if(mRobot.mCurrentPosition.row == mFinalPosition.row &&
-      mRobot.mCurrentPosition.column == mFinalPosition.column)
+   if( mRobot.mCurrentPosition.row == mFinalPosition.row &&
+      mRobot.mCurrentPosition.column == mFinalPosition.column )
    {
       destinationReached = true;
    }
@@ -116,7 +116,7 @@ bool NavigationModel::destinationIsReached()
  *******************************************************************************/
 void NavigationModel::clearPath()
 {
-   while(!mPathToDest.empty())
+   while( !mPathToDest.empty() )
    {
       mrGrid->removePathCell(mPathToDest.top());
       mPathToDest.pop();
@@ -261,7 +261,7 @@ bool NavigationModel::nextPosition(Position *apPos)
 {
    bool knownNextPos = false;
 
-   if(!mPathToDest.empty())
+   if( !mPathToDest.empty() )
    {
       knownNextPos = true;
       printf("nextPos is %i, %i\n",mPathToDest.top().row, mPathToDest.top().column);
@@ -289,20 +289,21 @@ bool NavigationModel::nextPosition(Position *apPos)
 /*******************************************************************************
  * nextPositionVector
  *
- *
+ * Fills the position vector pointer sent with the vector in respect to the robot
+ * reference frame. The position and orientation of the robot is updated.
  *
  * @param  [out]  aNextPosVec
  *
  * @return knownNextPosVector
  *
  *******************************************************************************/
-bool NavigationModel::nextPositionVector(vector<float> *aNextPosVec)
+bool NavigationModel::nextPositionVector(vector<float> *apNextPosVec)
 {
    bool knownNextPosVector = false;
    Position nextPos;
 
    // Get the next position
-   if(nextPosition(&nextPos))
+   if( nextPosition(&nextPos) )
    {
       // Calculate the position vector in respect to the grid
       vector<float> posVecGrid;
@@ -314,8 +315,8 @@ bool NavigationModel::nextPositionVector(vector<float> *aNextPosVec)
       tempVec = transMatGtoR(posVecGrid);
 
       // Push back results in the pointed vector
-      aNextPosVec->push_back(tempVec[0]*GRID_CM);
-      aNextPosVec->push_back(tempVec[1]*GRID_CM);
+      apNextPosVec->push_back(tempVec[0]*GRID_CM);
+      apNextPosVec->push_back(tempVec[1]*GRID_CM);
 
       // Set the robot's new position and orientation
       updateRobotOrientation(atan2(posVecGrid[0], posVecGrid[1])*180/PI);
@@ -345,7 +346,7 @@ bool NavigationModel::calculatePathToDest()
 {
    bool mPathFound = false;
 
-   if(mKnownDestination)
+   if( mKnownDestination )
    {
       // A* algorithm
       if(aStarAlgorithm()){
@@ -375,20 +376,17 @@ bool NavigationModel::calculatePathToDest()
  * @return true
  *
  *******************************************************************************/
-bool NavigationModel::addObstacle(int aSensorID, float aAngle, float aDistance)
+bool NavigationModel::addObstacle(vector<float> aSensorDistances)
 {
-   printf("Sensor #%i at %.2f deg and %.2f cm\n",aSensorID,aAngle,aDistance);
-
    vector<Position> newObstacles;
 
-
    // Caculation of obstacle cells not yet implemented
-   newObstacles.push_back(Position(aAngle,aDistance)); // TEMPORARY, FOR TESTING PURPOSES
+   newObstacles.push_back(Position(aSensorDistances[0],aSensorDistances[1])); // TEMPORARY, FOR TESTING PURPOSES
 
 
    bool recalculatePath = false;
 
-   for(unsigned int i = 0; i < newObstacles.size(); i++)
+   for( unsigned int i = 0; i < newObstacles.size(); i++ )
    {
       if( !(mrGrid->addObstacle(newObstacles[i])) )
       {
@@ -397,7 +395,7 @@ bool NavigationModel::addObstacle(int aSensorID, float aAngle, float aDistance)
       }
    }
 
-   if(recalculatePath)
+   if( recalculatePath )
    {
       calculatePathToDest();
    }

@@ -1,4 +1,22 @@
-#include "NavSystemCommon.h"
+/*******************************************************************************
+*
+* PROJECT: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
+*
+* SECTION: Navigation System
+*
+* AUTHOR: Jean-Sebastien Fiset
+*
+* DESCRIPTION:
+*
+*	 Test main function to test the navigation system section
+*
+* NOTES:
+*
+*
+*
+********************************************************************************/
+/** @file main.cpp*/
+
 #include "Grid.h"
 #include "NavigationModel.h"
 
@@ -13,7 +31,7 @@ static void moveRobot(NavigationModel * model)
       printf("NEXT (%.2f, %.2f)\n",firstPosition[0],firstPosition[1]);		// WRITE TO ARD
    }
 
-   cout << "Moving the robot, type R if cell is reached, type ADD followed by (on the next line) <SensorID> <angle> <distance_cm> to add a obstacle or STOP" <<endl;
+   cout << "Moving the robot, type R if cell is reached, type ADD followed by (on the next line) <rowIndex> <colIndex> to add an obstacle or STOP" <<endl;
 
    while(!model->destinationIsReached())
    {
@@ -25,13 +43,16 @@ static void moveRobot(NavigationModel * model)
 
       if(feedback == "ADD")
       {
-         int sensorID;
-         float angle;
-         float distance;
+         float x,y;
+
+         vector<float> obst_distances;
 
          //Input the information regarding the new obstacle
-         cin >> sensorID >> angle >> distance;
-         model->addObstacle(sensorID, angle, distance);
+         cin >> x >> y;
+         obst_distances.push_back(x);
+         obst_distances.push_back(y);
+
+         model->addObstacle(obst_distances);
       }
       else if(feedback == "R")
       {

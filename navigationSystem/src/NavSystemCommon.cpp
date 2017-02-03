@@ -1,22 +1,75 @@
+/*******************************************************************************
+*
+* PROJECT: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
+*
+* SECTION: Navigation System
+*
+* AUTHOR: Jean-Sebastien Fiset
+*
+* DESCRIPTION:
+*
+*	 Navigation System common struct and class functions implementation
+*
+* NOTES:
+*
+*
+*
+********************************************************************************/
+/** @file NavSystemCommon.cpp*/
+
 #include "NavSystemCommon.h"
 
 
+/*******************************************************************************
+ * Position
+ *
+ *    Default constructor
+ *
+ *******************************************************************************/
 Position::Position()
 {
 }
 
 
+
+/*******************************************************************************
+ * Position
+ *
+ *      Constructor setting a row and col for the struct
+ *
+ * @param  [in]  aRow
+ * @param  [in]  aCol
+ *
+ *******************************************************************************/
 Position::Position(int aRow, int aCol)
 {
   row=aRow;
   column=aCol;
 }
 
+
+
+/*******************************************************************************
+ * Robot
+ *
+ *    Default constructor
+ *
+ *******************************************************************************/
 Robot::Robot()
 {
 }
 
 
+
+/*******************************************************************************
+ * updatePosition
+ *
+ *    Updates the row and column index of the robot
+ *
+ *  @param  [in]  aNewRow
+ *  @param  [in]  aNewCol
+ *
+ *******************************************************************************/
 void Robot::updatePosition(int aNewRow, int aNewCol)
 {
    mCurrentPosition.row=aNewRow;
@@ -24,6 +77,13 @@ void Robot::updatePosition(int aNewRow, int aNewCol)
 }
 
 
+
+/*******************************************************************************
+ * print
+ *
+ *    Prints the current position and orienation of the robot
+ *
+ *******************************************************************************/
 void Robot::print()
 {
    printf("---------------------Robot-----------------\n");
@@ -31,6 +91,8 @@ void Robot::print()
    printf("Orientation: %f\n", mOrientation);
 
 }
+
+
 
 
 

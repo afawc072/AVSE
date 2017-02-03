@@ -1,169 +1,288 @@
+/*******************************************************************************
+*
+* PROJECT: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
+*
+* SECTION: Navigation System
+*
+* AUTHOR: Jean-Sebastien Fiset
+*
+* DESCRIPTION:
+*
+*	  Grid Class Function Implementation
+*
+* NOTES:
+*
+*
+*
+********************************************************************************/
+/** @file Grid.cpp*/
+
 #include "Grid.h"
 
 
 
+/*******************************************************************************
+ * Grid
+ *
+ * 	Default constructor
+ *
+ *******************************************************************************/
 Grid::Grid()
 {
    resetGrid();
 }
 
 
-void Grid::resetGrid() {
+
+/*******************************************************************************
+ * resetGrid
+ *
+ * 	Resets the Grid based on the Grid.txt file
+ *
+ *******************************************************************************/
+void Grid::resetGrid()
+{
    readGridFromFile("Grid.txt");
-/*
-   for(int rows=0; rows< NUM_ROW; rows++){
-      for(int cols=0; cols< NUM_COL; cols++){
-         mGrid[rows][cols]=INITIAL_GRID[rows][cols];
-      }
-   }
-   setUpTags();*/
 }
 
 
+
+/*******************************************************************************
+ * getDestPositions
+ *
+ *  Returns the vector containing the destination positions
+ *
+ * @return    mDestPositions
+ *
+ *******************************************************************************/
 vector<Position> Grid::getDestPositions()
 {
    return mDestPositions;
 }
 
+
+
+/*******************************************************************************
+ * getTagPositions
+ *
+ *  Returns the vector containing the tag positions
+ *
+ * @return    mTagPositions
+ *
+ *******************************************************************************/
 vector<Position> Grid::getTagPositions()
 {
    return mTagPositions;
 }
 
 
+
+/*******************************************************************************
+ * isBuffer
+ *
+ *  Returns true if the cell at the row and column index specified is a Buffer cell
+ *
+ *  @param [in]   aRow
+ *  @param [in]   aCol
+ *
+ *  @return    fBufferCell
+ *
+ *******************************************************************************/
 bool Grid::isBuffer(int aRow, int aCol)
 {
-   if(aRow>=0 && aRow < NUM_ROW && aCol>=0 && aCol<NUM_COL)
+   bool fBufferCell = false;
+
+   // Check if row and column specified a cell inside the grid
+   if( aRow>=0 && aRow < NUM_ROW && aCol>=0 && aCol<NUM_COL )
    {
-      return mGrid[aRow][aCol] == B;
+       // Check if the state of the cell is B (for buffer)
+       if( mGrid[aRow][aCol] == B )
+       {
+          fBufferCell = true;
+       }
    }
-   return false;
+   return fBufferCell;
 }
 
+
+
+/*******************************************************************************
+ * isOccupied
+ *
+ *  Returns true if the cell specified is either in state "free", "path" or "destination"
+ *  **Also returns true is row and column index are not inside the grid
+ *
+ *  @param [in]   aRow
+ *  @param [in]   aCol
+ *
+ *  @return    fOccupied
+ *
+ *******************************************************************************/
 bool Grid::isOccupied(int aRow, int aCol)
 {
-   return !(mGrid[aRow][aCol] == F || mGrid[aRow][aCol] == P || mGrid[aRow][aCol] == D);
+   bool fOccupied = true;
+
+   // Check if row and column specified a cell inside the grid
+   if( aRow>=0 && aRow < NUM_ROW && aCol>=0 && aCol<NUM_COL )
+   {
+      fOccupied = !(mGrid[aRow][aCol] == F || mGrid[aRow][aCol] == P || mGrid[aRow][aCol] == D);
+   }
+
+  return fOccupied;
+
 }
 
 
 
-// Not used
-bool Grid::addTag(Position aNewTag){
-
-   bool validTag=true;
-   int row = aNewTag.row;
-   int col = aNewTag.column;
-
-   if(row>=0 && row < NUM_ROW && col>=0 && col<NUM_COL)
-   {
-      if(mGrid[row][col]==W)
-      {
-         mGrid[row][col]=T;
-      }
-      else
-      {
-         printf("Cell (%i,%i) is not a wall\n",row,col);
-         validTag=false;
-      }
-   }
-   else
-   {
-      validTag=false;
-   }
-   return validTag;
-}
-
-
-
-
+/*******************************************************************************
+ * addObstacle
+ *
+ *  Change the state of the cell specified if it is inside the grid and is free.
+ *    - If the cell is not inside the grid or is already occupied, we ignore it.
+ *    - If the cell is a free cell, we change the state to occupied and return true.
+ *    - If the cell is a path cell, we change the state to occupied and return false.
+ *
+ *  @param [in]   aNewObstacle
+ *
+ *  @return    fNotInPath
+ *
+ *******************************************************************************/
 bool Grid::addObstacle(Position aNewObstacle){
 
-   bool validObst=true;
+   bool fNotInPath = true;
+
+   // Get the row and column
    int row = aNewObstacle.row;
    int col = aNewObstacle.column;
 
-   if(row>=0 && row < NUM_ROW && col>=0 && col<NUM_COL)
+   // Check if cell is inside the grid and not occupied
+   if( !isOccupied(row,col) )
    {
-      if(mGrid[row][col]==P)
+      if( mGrid[row][col]==P )
       {
-         validObst=false;
+         fNotInPath=false;
       }
+      // Change the state to occupied
       mGrid[row][col]=O;
    }
    else
    {
-      //Ignore since obstacle index is not within the grid
+      //Ignore since obstacle index is not within the grid or already occupied
    }
 
-   return validObst;
+   return fNotInPath;
 }
 
 
 
-bool Grid::addPathCell(int row, int col)
+/*******************************************************************************
+ * addPathCell
+ *
+ *  Change the state of the cell specified if it is inside the grid and is not occupied
+ *    - If the cell is not inside the grid or occupied, we ignore and return false
+ *    - If the cell is inside the gird and not occupied, we change the state to path
+ *      and return true.
+ *
+ *  @param [in]   aRow
+ *  @param [in]   aCol
+ *
+ *  @return    fNotInPath
+ *
+ *******************************************************************************/
+bool Grid::addPathCell(int aRow, int aCol)
 {
-   bool validPathCell = false;
+   bool fValidPathCell = false;
 
-   if(row>=0 && row < NUM_ROW && col>=0 && col<NUM_COL)
+   if( !isOccupied(aRow, aCol) )
    {
-      mGrid[row][col]=P;
+      mGrid[aRow][aCol]=P;
+      fValidPathCell = true;
    }
 
-   return validPathCell;
+   return fValidPathCell;
 }
 
 
 
-
-bool Grid::removePathCell(Position cellToRemove)
+/*******************************************************************************
+ * removePathCell
+ *
+ *  Change the state of a path cell specified to free and return true if this cell was
+ *  a path cell.
+ *
+ *  @param [in]   aCellToRemove
+ *
+ *  @return    fPathCell
+ *
+ *******************************************************************************/
+bool Grid::removePathCell(Position aCellToRemove)
 {
-   bool pathCell = false;
-   if(mGrid[cellToRemove.row][cellToRemove.column] == P)
+   bool fPathCell = false;
+
+   if( mGrid[aCellToRemove.row][aCellToRemove.column] == P )
    {
-      mGrid[cellToRemove.row][cellToRemove.column] = F;
-      pathCell = true;
+      mGrid[aCellToRemove.row][aCellToRemove.column] = F;
+      fPathCell = true;
    }
-   return pathCell;
+   return fPathCell;
 }
 
-void Grid::printGrid(){
+
+
+/*******************************************************************************
+ * printGrid
+ *
+ *  Prints the content of the Grid (for testing purposes)
+ *
+ *
+ *******************************************************************************/
+void Grid::printGrid()
+{
    printf("\n----------------------GRID-------------------------\n");
-   for(unsigned int rows=0; rows<NUM_ROW; rows++){
-      for(unsigned int cols=0; cols<NUM_COL; cols++){
+   for(unsigned int rows=0; rows<NUM_ROW; rows++)
+   {
+      for(unsigned int cols=0; cols<NUM_COL; cols++)
+      {
           printf("%c ",cstate_names[mGrid[rows][cols]]);
       }
-	printf("\n");
+      printf("\n");
    }
    printf("------------------------------------------------------\n");
 }
 
 
-/*
-void Grid::setUpTags()
-{
-   for(unsigned int i = 0; i < TAG_POSITION.size() ; i++)
-   {
-      mGrid[TAG_POSITION[i].row][TAG_POSITION[i].column] = T;
-   }
-}
-*/
 
-
-void Grid::readGridFromFile(string filename)
+/*******************************************************************************
+ * readGridFromFile
+ *
+ *  Reads the file specified to build the Grid stored in the object.
+ *
+ *  @param [in]   aFilename
+ *
+ *******************************************************************************/
+void Grid::readGridFromFile( string aFilename )
 {
-   ifstream grid (filename);
+   // Open the file specified
+   ifstream grid (aFilename);
    bool warning = false;
    int lines_count = 0;
    int row=0;
    string line;
-   while(getline(grid,line))
+
+   // Go through all the lines in the file
+   while( getline(grid,line) )
    {
       lines_count++;
       int col=0;
-      for(unsigned int i = 0 ; i<line.length() ; i++)
+
+      // Go through the columns in the current line
+      for( unsigned int i = 0 ; i<line.length() ; i++ )
       {
-	 if(col == NUM_COL){warning=true; break;}
-         switch(line[i])
+	 // If we see that a line contains more column than specified, we ignore and throw a warning
+	 if( col == NUM_COL ){warning=true; break;}
+
+         // Assign the cell state according to the character found
+	 switch( line[i] )
 	 {
 	    case 'F':
 		mGrid[row][col]=F;
@@ -191,9 +310,12 @@ void Grid::readGridFromFile(string filename)
 		break;
          }
       }
+
+      // If there is more row in the file than specified, stop analyzing the file
       if(row++ == NUM_ROW) break;
    }
 
+   // Print a message if the number of row or the number of column in the file didn't match
    if(lines_count != NUM_ROW) printf("The number of lines expected in Grid.txt is 30 but %i was found (to be fixed)",lines_count);
    if(warning) printf("The number of columns expected in Grid.txt is 50 but more was found in a certain line(to be fixed)");
 

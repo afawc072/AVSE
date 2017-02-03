@@ -1,3 +1,22 @@
+/*******************************************************************************
+*
+* PROJECT: AUTONOMOUS VEHICULE IN A STRUCTURED ENVIRONMENT
+*
+* SECTION: Navigation System
+*
+* AUTHOR: Jean-Sebastien Fiset
+*
+* DESCRIPTION:
+*
+*	 Grid Class Header File
+*
+* NOTES:
+*
+*
+*
+********************************************************************************/
+/** @file Grid.h*/
+
 #ifndef GRID
 #define GRID
 
@@ -28,42 +47,50 @@ class Grid
 {
     public:
 
+	// Default constructor
 	Grid();
 
+  	// Resets the Grid to the grid specify in the file
 	void resetGrid();
 
+  	// Returns the destination positions vector
 	vector<Position> getDestPositions();
 
+	// Returns the destination positions vector
 	vector<Position> getTagPositions();
 
-
+  	// Returns true if mGrid[aRow][aCol] is a buffer cell
         bool isBuffer(int aRow, int aCol);
 
+  	// Returns true if cell is occupied (B,W or T) or out of bounds
 	bool isOccupied(int aRow, int aCol);
 
-
-	bool addTag(Position aNewTag);
-
+  	// Changes the state of the cell if free or in path. If in path, recalculate path from current position
 	bool addObstacle(Position aNewObstacle);
 
-	bool addPathCell(int row, int col);
+  	// Changes the state of the cell to a path cell
+	bool addPathCell(int aRow, int aCol);
 
-	bool removePathCell(Position cellToRemove);
+  	// Change the state of a path cell specified to free and return true if this cell was a path cell.
+	bool removePathCell(Position aCellToRemove);
 
-
+  	// Display the current grid
 	void printGrid();
+
 
     private:
 
+  	// Matrix of cell states
 	cstate mGrid[NUM_ROW][NUM_COL];
 
+  	// Vector containing the position of each destination in the order of their DestID
 	vector<Position> mDestPositions;
 
+  	// Vector containing the position of each tags in the order of their tagID
 	vector<Position> mTagPositions;
 
-
-	void setUpTags();
-
-        void readGridFromFile(string filename);
+        // Reads the grid from the filename specified
+        void readGridFromFile(string aFilename);
 };
+
 #endif /*GRID*/
