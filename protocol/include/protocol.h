@@ -28,10 +28,11 @@
 #include <termios.h>
 #include <string>
 #include <cstring> // for strncpy
+#include <sstream> //ostringstream
 #include <vector>
 
 // IMPORTANT SETTINGS
-static const int NB_BYTES = 32;//Defined Buffer Size
+static const int NB_BYTES = 34;//Defined Buffer Size
 
 static const int SLEEP_S = 1;//Short Sleep(ms);
 static const int SLEEP_M = 1.5;//Medium Sleep(ms);
@@ -98,7 +99,7 @@ public:
 	bool init(errorType &apE);
   bool testConnection(errorType &apE);
 	bool send(command aCommand, string aInfoW, errorType &apE);
-  bool receive(command &apCommand, string &apInfoR, errorType &apE );
+  bool receive(int aNumAttempts, int aDelay, command &apCommand, string &apInfoR, errorType &apE );
   bool closeP(errorType &apE);
 
 
@@ -112,12 +113,5 @@ private:
 
   bool findCommand(string aCmd, command &arCmd);
 };
-/*
-static string trim(string str)
-{
-   size_t first = str.find_first_not_of(' ');
-      size_t last = str.find_last_not_of(' ');
-   return str.substr(first,(last-first+1));
-}
-*/
+
 #endif /*PROTOCOL*/

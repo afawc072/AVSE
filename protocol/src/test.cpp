@@ -19,22 +19,56 @@ int main(){
   }
   cout << "SEND ANGLE" << endl;
   sleep(2);
-  sendS="10";
+  sendS="5";
 
   if(!test.send(CAMANGLE,sendS,error))
   {
     errorS = PROTOCOL_ERR[error];
     cout << errorS << endl;
   }
-  cout << "RECEIVE CONFG" << endl;
+ 
+ cout << "READING.." << endl;
   //cout.flush();
-  sleep(2);
 
-  //if(!test.receive(CAMANGLE,receiveS,error))
-  //{
-  //  errorS = PROTOCOL_DICT[aCommand];
-  //  cout << errorS << endl;
-  //}
+  command rCmd;
+  string receivedInfo;
+  int n = 5;
+  int delay = SLEEP_S;;
+  if(!test.receive(n,delay,rCmd,receivedInfo,error))
+  {
+    cout << PROTOCOL_ERR[error]<<endl;
+  }
+  else
+  {
+    cout<< "RECEIVED CMD: "<< PROTOCOL_DICT[rCmd]<<endl;
+  }
+
+  sleep(2);
+  cout << "SENDING NEXT"<<endl;
+  float x = 7.07;
+  float y = 7.07;
+  ostringstream infoNext;
+  infoNext << x<<","<<y;
+  string info = infoNext.str();
+   if(!test.send(NEXT,info,error))
+  {
+    errorS = PROTOCOL_ERR[error];
+    cout << errorS << endl;
+  }
+
+ 
+   cout << "READING.." << endl;
+  //cout.flush();
+
+
+  if(!test.receive(10,SLEEP_L,rCmd,receivedInfo,error))
+  {
+    cout << PROTOCOL_ERR[error]<<endl;
+  }
+  else
+  {
+    cout<< "RECEIVED CMD: "<< PROTOCOL_DICT[rCmd]<<endl;
+  }
 
 /*
 command rCommand;

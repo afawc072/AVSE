@@ -25,11 +25,19 @@ Protocol::Protocol()
 
 bool Protocol::init(errorType &apE)
 {
+  system("bin/pybaud.sh");
+
+  struct termios toptions;
   
   //Open the File Directory /dev/ttyACM0 (Arduino)
   fd=open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
-  //This is done twice because we had issues...
-  fd = open("/dev/ttyACM0", O_RDWR | O_NOCTTY | O_NONBLOCK);
+  
+  tcgetattr(fd,&toptions);
+  cfsetispeed(&toptions, B9600);
+  cfsetospeed(&toptions, B9600);
+
+  tcsetattr(fd, TCSANOW, &toptions);
+
   //ADD Error Check;
   if(fd==-1)
   {
@@ -58,7 +66,6 @@ bool Protocol::testConnection(errorType &apE)
   The following logic sends the ready command to the arduino, and in the case
   the write is successful, we receive LISTEN, hopefully.
   */
-  cout << "WRITING TO ARDUINO" << endl;
   if(writeP(cmd,nUll,apE))
   {
     //Sleep Function to ensure proper synchronization?!?
@@ -66,6 +73,7 @@ bool Protocol::testConnection(errorType &apE)
     cout << "WRITEP OK" << endl;
     if(readP(rcv,nUll,apE))
     {
+      sleep(SLEEP_S);
       //The connection test shoudl return LISTEN by the ARDUINO.
       cout << "READP OK" << endl;
       if(rcv==LISTEN)
@@ -111,13 +119,19 @@ bool Protocol::send(command aCommand, string aInfoW, errorType &apE )
  *      Function to be by other c++ programs to receive data from arduino
  *
  *******************************************************************************/
-bool Protocol::receive(command& apCommand, string &apInfoR, errorType &apE)
+bool Protocol::receive(int aNumAttempts, int aDelay, command& apCommand, string &apInfoR, errorType &apE)
 {
   bool flagR=false;
+  int counter = 0;
 
-  if(readP(apCommand, apInfoR, apE))
+  while( counter < aNumAttempts && !flagR)
   {
-    flagR=true;
+     if(readP(apCommand, apInfoR, apE))
+     {
+       flagR=true;
+     }
+     counter++;
+     sleep(aDelay);
   }
   return flagR;
 }
@@ -148,7 +162,6 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
   fill_n(bufw,NB_BYTES,0);
   //Transform the string to a char[]. Size cmd increase because % appeared
   strncpy(bufTempCmd, cmd.c_str(), (sizeCmd+1));
-  cout << "STRNCPY " << bufTempCmd << " SIZE" << sizeCmd << endl;
   //Check if Info is NULL and create its char array if non-empty.
   if(aInfoW!="")
   {
@@ -156,7 +169,6 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
     sizeInfo = aInfoW.length();
     bufTempInfo= new char[sizeInfo];
     strncpy(bufTempInfo, aInfoW.c_str(), sizeInfo);
-    cout << "INFO " << bufTempInfo << endl;
   }
 
   /*
@@ -171,16 +183,13 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
   }
  i++;
   bufw[i]=HEADER_SPACE;
-  cout << "FLAGe" << flagE << endl;
   if(flagE)
   {
-    cout << "GETS TO FLAG " << bufw << endl; 
     int j=0;
     for(j=0;j<sizeInfo;j++)
     {
       bufw[(i+1)]=bufTempInfo[j];
       i++;
-      cout << "BUFTEMPINFO " << bufTempInfo[j] << endl;
     }
   }
   i++;
@@ -230,7 +239,7 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
 //troubleshoot
   sleep(SLEEP_S);
   ret=read(fd,bufr,NB_BYTES);
-  cout << "READING " << ret << "BUFR" << bufr << endl;
+  cout <<"BUFR " << bufr << endl;
   
   //error for read
   if(ret==-1)
@@ -253,7 +262,6 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
       {
         if(i==(NB_BYTES-1))
         {
-          cout << "NO HEADER_SPACE " << endl;
           apE=ERRORS;
           return false;
         }
@@ -262,10 +270,8 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
           i++;
       }
       i++;
-     cout << bufCmd << "BLBLA" << endl;
       cmd=string(bufCmd);
       
-cout << cmd << "CMON" << endl;
       flagR=findCommand(cmd, apCommand);
 
       if(!flagR)
@@ -283,9 +289,9 @@ cout << cmd << "CMON" << endl;
         j=0;
         while(bufr[i]!=HEADER_END)
         {
-          if(i==sizeof(bufr));
+          if(i== sizeof(bufr))
           {
-            cout << "NO HEADER_END " << endl;
+            cout << i<<" NO HEADER_END " << endl;
             apE=ERRORS;
             return false;
           }
@@ -293,7 +299,7 @@ cout << cmd << "CMON" << endl;
             j++;
             i++;
         }
-        apInfoR=string(bufCmd);
+        apInfoR=string(bufInfo);
         return flagR;
       }
 
