@@ -79,7 +79,7 @@ int main(int argc, const char **argv)
 {
 
    //Setup Grid
-   Grid myGrid;
+   Grid myGrid("Grid.txt");
    myGrid.printGrid();
 
    // Initialize Navigation object

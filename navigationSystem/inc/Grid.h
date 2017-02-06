@@ -50,6 +50,9 @@ class Grid
 	// Default constructor
 	Grid();
 
+	// Constructor taking a file path in argument
+	Grid(string aGridFilePath);
+
   	// Resets the Grid to the grid specify in the file
 	void resetGrid();
 
@@ -58,6 +61,10 @@ class Grid
 
 	// Returns the destination positions vector
 	vector<Position> getTagPositions();
+
+
+	// Sets the file path for the grid that will be used
+        void setGridFilePath(string aFilePath);
 
   	// Returns true if mGrid[aRow][aCol] is a buffer cell
         bool isBuffer(int aRow, int aCol);
@@ -82,6 +89,9 @@ class Grid
 
   	// Matrix of cell states
 	cstate mGrid[NUM_ROW][NUM_COL];
+
+	// File path pointing to the matrix file
+	string mGridFilePath;
 
   	// Vector containing the position of each destination in the order of their DestID
 	vector<Position> mDestPositions;
