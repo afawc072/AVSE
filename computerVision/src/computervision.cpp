@@ -57,7 +57,11 @@ the use of this software, even if advised of the possibility of such damage.
 
 
 #include "computervision.h"
+computervision::computervision()
+{
+}
 
+int main(){}
 
 bool computervision::readCameraParameters(string filename, Mat &camMatrix, Mat &distCoeffs) {
     FileStorage fs(filename, FileStorage::READ);
@@ -68,7 +72,6 @@ bool computervision::readCameraParameters(string filename, Mat &camMatrix, Mat &
     return true;
 }
 
-int main(){}
 
 bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &angle) {
     //CommandLineParser parser(argc, argv, keys);

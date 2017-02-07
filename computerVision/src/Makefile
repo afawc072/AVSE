@@ -4,12 +4,12 @@ CXXFLAGS += -c -Wall $(shell pkg-config --cflags opencv)
 LDFLAGS += $(shell pkg-config --libs --static opencv)
 
 INC_DIR = -I/usr/local/include/opencv2 \
-	  -I/home/pi/opencv-3.2.0/build/include
+	  -I/home/pi/opencv-3.2.0/build/include \
+	  -I../include
+all: ../bin/computervision
 
-all: ../bin/detect_mod
+../bin/computervision: computervision.o; $(CXX) $< -o $@ $(LDFLAGS)
 
-../bin/detect_mod: detect_mod.o; $(CXX) $< -o $@ $(LDFLAGS)
-
-detect_mod.o: detect_mod.cpp; $(CXX) $(INC_DIR) $< -o $@ $(CXXFLAGS)
+computervision.o: computervision.cpp; $(CXX) $(INC_DIR) $< -o $@ $(CXXFLAGS)
 
 clean: ; rm -f detect_markers.o ../bin/detect
