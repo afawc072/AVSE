@@ -36,7 +36,7 @@ or tort (including negligence or otherwise) arising in any way out of
 the use of this software, even if advised of the possibility of such damage.
 */
 
-
+//https://stackoverflow.com/questions/18637494/camera-position-in-world-coordinate-from-cvsolvepnp#18643735
 #include <opencv2/highgui.hpp>
 #include <opencv2/aruco.hpp>
 #include <opencv2/core.hpp>
@@ -185,8 +185,8 @@ int main(int argc, char *argv[]) {
         totalTime += currentTime;
         totalIterations++;
         if(totalIterations % 30 == 0) {
-            cout << "Detection Time = " << currentTime * 1000 << " ms "
-                 << "(Mean = " << 1000 * totalTime / double(totalIterations) << " ms)" << endl;
+        //    cout << "Detection Time = " << currentTime * 1000 << " ms "
+        //         << "(Mean = " << 1000 * totalTime / double(totalIterations) << " ms)" << endl;
         }
 
         // draw results
@@ -210,29 +210,55 @@ int main(int argc, char *argv[]) {
 	
 	if(key == 'c' && ids.size() > 0)
 	{
-	    cout << "rotation x axis= " << rvecs[0][0] << endl;
-	    cout << "translation x axis= " << tvecs[0][0] << endl;
-	    cout << "rotation y axis= " << rvecs[0][1] << endl;
-            cout << "translation y axis= " << tvecs[0][1] << endl;
-	    cout << "rotation z axis= " << rvecs[0][2] << endl;
-            cout << "translation z axis= " << tvecs[0][2] << endl;
-            
+	    cout << "translation x axis= " << tvecs[0][0]*100 << " cm" << endl;
+	    cout << "rotation XX axis = " << rvecs[0][0]*57.3 << endl;
+            cout << "translation y axis= " << tvecs[0][1]*-100 << " cm" << endl;
+	    cout << "rotation y axis = " << rvecs[0][1] << endl;
+            cout << "translation z axis= " << tvecs[0][2]*100 << " cm"  << endl;
+	    cout << "rotation ZZ axis = " << rvecs[0][2]*57.3 << endl;            
 	    cv::Mat R;
 	    cv::Rodrigues(rvecs, R); // R is 3x3
-	    R=tvecs*R;
-	    cout << " 11: " << R.at<double>(0,0) << " 12: " << R.at<double>(0,1) << " 13: " << R.at<double>(0,2) << endl;
-	    cout << " 21: " << R.at<double>(1,0) << " 22: " << R.at<double>(1,1) << " 23: " << R.at<double>(1,2) << endl;
-	    cout << " 31: " << R.at<double>(2,0) << " 32: " << R.at<double>(2,1) << " 33: " << R.at<double>(2,2) << endl;
-//	    R = R.t();  // rotation of inverse
-//	    tvecs = -R * tvecs; // translation of inverse
+	    //R=tvecs*R;
+	    Mat results= Mat_<std::complex<double> >(4,4);
+	    cv::Mat Qtr(4, 4, R.type());
+	    for(int i=0;i<3;i++)
+	    {
+	        for(int j=0;j<3;j++)
+		{
+		  cout << i << " " << j << endl;  
+		  Qtr.at<double>(i,j)=R.at<double>(i,j);
+		}
+	    }
+	    cout << "Qtr CREATED" << endl;
+	   
+	    Qtr.at<double>(0,3)=tvecs[0][0];
+	    Qtr.at<double>(1,3)=tvecs[0][1];
+	    Qtr.at<double>(2,3)=tvecs[0][2];
+            Qtr.at<double>(3,0)=0;
+            Qtr.at<double>(3,1)=0;
+            Qtr.at<double>(3,2)=0;
+            Qtr.at<double>(3,3)=1;
 
+	    Qtr=Qtr.inv();
+//	    Mat Q= camMatrix * Qtr;
+	    //Mat Q=Qtr;
+	    cout << "MAT MULT" << endl;
+
+	    cout << " 11: " << Qtr.at<double>(0,0) << " 12: " << Qtr.at<double>(0,1) << " 13: " << Qtr.at<double>(0,2) <<"1,4 "  << Qtr.at<double>(0,3) << endl;
+	    cout << " 21: " << Qtr.at<double>(1,0) << " 22: " << Qtr.at<double>(1,1) << " 23: " << Qtr.at<double>(1,2) <<"2,3 "  << Qtr.at<double>(1,3) << endl;
+	    cout << " 31: " << Qtr.at<double>(2,0) << " 32: " << Qtr.at<double>(2,1) << " 33: " << Qtr.at<double>(2,2) <<"3,4 "  << Qtr.at<double>(2,3) << endl;
+	     cout << " 41: " << Qtr.at<double>(3,0) << " 42: " << Qtr.at<double>(3,1) << " 43: " << Qtr.at<double>(3,2) <<"4,4 "  << Qtr.at<double>(3,3) << endl;
+//            cout << "euler angle: phi " << atan2(Qtr.at<double>(2,0), Qtr.at<double>(2,1))*57.3 << " theta: " << acos(Qtr.at<double>(2,2))*57.3 << " epsilon: " << -atan2(Qtr.at<double>(0,2), Qtr.at<double>(1,2))*57.3 << endl;
+//	    R = R.t();  // rotation of inverse
+//	    tvecs = tvecs * -R; // translation of inverse
+//
 //	    cv::Mat T(4, 4, R.type()); // T is 4x4
 //	    T( cv::Range(0,3), cv::Range(0,3) ) = R * 1; // copies R into T
 //	    T( cv::Range(0,3), cv::Range(3,4) ) = tvecs * 1; // copies tvec into T
 	    // fill the last row of T (NOTE: depending on your types, use float or double)
 //	    double *p = T.ptr<double>(3);
 //	    p[0] = p[1] = p[2] = 0; p[3] = 1;
-	}
+}
     }
 
     return 0;
