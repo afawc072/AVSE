@@ -51,7 +51,7 @@ the use of this software, even if advised of the possibility of such damage.
 *
 * NOTES:
 *	This function is strongly based upon the detect.cpp code provided in the aruco module of opencv 3.2.0
-*
+* //https://stackoverflow.com/questions/18637494/camera-position-in-world-coordinate-from-cvsolvepnp#18643735
 *
 *********************************************************************************/
 
@@ -59,7 +59,7 @@ the use of this software, even if advised of the possibility of such damage.
 #include "computervision.h"
 
 
-static bool readCameraParameters(string filename, Mat &camMatrix, Mat &distCoeffs) {
+bool computervision::readCameraParameters(string filename, Mat &camMatrix, Mat &distCoeffs) {
     FileStorage fs(filename, FileStorage::READ);
     if(!fs.isOpened())
         return false;
@@ -68,10 +68,15 @@ static bool readCameraParameters(string filename, Mat &camMatrix, Mat &distCoeff
     return true;
 }
 
+int main(){}
 
-int detectTag(int argc, char *argv[]) {
-    CommandLineParser parser(argc, argv, keys);
-    parser.about(about);
+bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &angle) {
+    //CommandLineParser parser(argc, argv, keys);
+    //parser.about(about);
+    bool flagCV = false;
+
+    //Markers in the camera's frame.
+    double xMarker, zMarker;
 
     Ptr<aruco::DetectorParameters> detectorParams = aruco::DetectorParameters::create();
     detectorParams->doCornerRefinement = true; // do corner refinement in markers
@@ -80,15 +85,18 @@ int detectTag(int argc, char *argv[]) {
         aruco::getPredefinedDictionary(aruco::PREDEFINED_DICTIONARY_NAME(DICT_ID));
 
     Mat camMatrix, distCoeffs;
-    if(estimatePose) {
-        bool readOk = readCameraParameters(CAM_PARAM, camMatrix, distCoeffs);
-        if(!readOk) {
-            cerr << "Invalid camera file" << endl;
-            return 0;
+    /*
+    Read the cameraParameters in order to get the the matrixs
+    for the camera and distCoeffs.
+    */
+    bool readOk = readCameraParameters(CAM_PARAM, camMatrix, distCoeffs);
+    if(!readOk) {
+        cerr << "Invalid camera file" << endl;
+        return 0;
         }
-    }
 
     VideoCapture inputVideo;
+    /*
     int waitTime;
     if(!video.empty()) {
         inputVideo.open(video);
@@ -97,11 +105,15 @@ int detectTag(int argc, char *argv[]) {
         inputVideo.open(camId);
         waitTime = 10;
     }
+    */
+
+    inputVideo.open(0);
+    //waitTime = 10;
 
     double totalTime = 0;
     int totalIterations = 0;
 
-    while(inputVideo.grab()) {
+    while(inputVideo.grab() && !flagCV) {
         Mat image, imageCopy;
         inputVideo.retrieve(image);
 
@@ -112,19 +124,68 @@ int detectTag(int argc, char *argv[]) {
         vector< Vec3d > rvecs, tvecs;
         // detect markers and estimate pose
         aruco::detectMarkers(image, dictionary, corners, ids, detectorParams, rejected);
-        if(estimatePose && ids.size() > 0)
-            aruco::estimatePoseSingleMarkers(corners, markerLength, camMatrix, distCoeffs, rvecs,
-                                             tvecs);
+        if(ids.size() > 0){
+
+          aruco::estimatePoseSingleMarkers(corners, MARKER_LENGTH, camMatrix, distCoeffs, rvecs,tvecs);
+
+          //Set the tagID reference to what was detected.
+          tagID=ids[0];
+
+          xMarker = tvecs[0][0];
+          zMarker = tvecs[0][2];
+          angle = atan2(zMarker,xMarker);
+
+	        cv::Mat R;
+          //Rodrigues Transformation
+	        cv::Rodrigues(rvecs, R); // R is 3x3
+
+	        cv::Mat Qtr(4, 4, R.type());
+	        for(int i=0;i<3;i++)
+	        {
+	          for(int j=0;j<3;j++)
+		        {
+
+		          Qtr.at<double>(i,j)=R.at<double>(i,j);
+		        }
+	        }
+
+
+	        Qtr.at<double>(0,3)=tvecs[0][0];
+	        Qtr.at<double>(1,3)=tvecs[0][1];
+	        Qtr.at<double>(2,3)=tvecs[0][2];
+          Qtr.at<double>(3,0)=0;
+          Qtr.at<double>(3,1)=0;
+          Qtr.at<double>(3,2)=0;
+          Qtr.at<double>(3,3)=1;
+
+    	    Qtr=Qtr.inv();
+          xCam = Qtr.at<double>(0,3);
+          zCam = Qtr.at<double>(2,3);
+
+          flagCV = true;
+
+	    //cout << " 11: " << Qtr.at<double>(0,0) << " 12: " << Qtr.at<double>(0,1) << " 13: " << Qtr.at<double>(0,2) <<"1,4 "  << Qtr.at<double>(0,3) << endl;
+	    //cout << " 21: " << Qtr.at<double>(1,0) << " 22: " << Qtr.at<double>(1,1) << " 23: " << Qtr.at<double>(1,2) <<"2,3 "  << Qtr.at<double>(1,3) << endl;
+	    //cout << " 31: " << Qtr.at<double>(2,0) << " 32: " << Qtr.at<double>(2,1) << " 33: " << Qtr.at<double>(2,2) <<"3,4 "  << Qtr.at<double>(2,3) << endl;
+        }
+
+        /*
         double currentTime = ((double)getTickCount() - tick) / getTickFrequency();
         totalTime += currentTime;
         totalIterations++;
+        */
+
+        /*
         if(totalIterations % 30 == 0) {
             cout << "Detection Time = " << currentTime * 1000 << " ms "
                  << "(Mean = " << 1000 * totalTime / double(totalIterations) << " ms)" << endl;
         }
+        */
 
         // draw results
-        image.copyTo(imageCopy);
+
+        //image.copyTo(imageCopy);
+        /*
         if(ids.size() > 0) {
             aruco::drawDetectedMarkers(imageCopy, corners, ids);
 
@@ -135,39 +196,15 @@ int detectTag(int argc, char *argv[]) {
             }
         }
 
+
         if(showRejected && rejected.size() > 0)
             aruco::drawDetectedMarkers(imageCopy, rejected, noArray(), Scalar(100, 0, 255));
 
         imshow("out", imageCopy);
         char key = (char)waitKey(waitTime);
         if(key == 27) break;
-
-	if(ids.size() > 0)
-	{
-	    cout << "rotation x axis= " << rvecs[0][0] << endl;
-	    cout << "translation x axis= " << tvecs[0][0] << endl;
-	    cout << "rotation y axis= " << rvecs[0][1] << endl;
-            cout << "translation y axis= " << tvecs[0][1] << endl;
-	    cout << "rotation z axis= " << rvecs[0][2] << endl;
-            cout << "translation z axis= " << tvecs[0][2] << endl;
-
-	    cv::Mat R;
-	    cv::Rodrigues(rvecs, R); // R is 3x3
-	    R=tvecs*R;
-	    cout << " 11: " << R.at<double>(0,0) << " 12: " << R.at<double>(0,1) << " 13: " << R.at<double>(0,2) << endl;
-	    cout << " 21: " << R.at<double>(1,0) << " 22: " << R.at<double>(1,1) << " 23: " << R.at<double>(1,2) << endl;
-	    cout << " 31: " << R.at<double>(2,0) << " 32: " << R.at<double>(2,1) << " 33: " << R.at<double>(2,2) << endl;
-//	    R = R.t();  // rotation of inverse
-//	    tvecs = -R * tvecs; // translation of inverse
-
-//	    cv::Mat T(4, 4, R.type()); // T is 4x4
-//	    T( cv::Range(0,3), cv::Range(0,3) ) = R * 1; // copies R into T
-//	    T( cv::Range(0,3), cv::Range(3,4) ) = tvecs * 1; // copies tvec into T
-	    // fill the last row of T (NOTE: depending on your types, use float or double)
-//	    double *p = T.ptr<double>(3);
-//	    p[0] = p[1] = p[2] = 0; p[3] = 1;
-	}
+        */
     }
 
-    return 0;
+    return flagCV;
 }

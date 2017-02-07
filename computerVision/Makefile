@@ -7,12 +7,12 @@
 
 OBJECT_NAME=computervision
 
-CPP_SOURCES=$(SRC_DIR)/test.cpp \
-	$(SRC_DIR)/computervision.cpp \
+CPP_SOURCES=$(SRC_DIR)/computervision.cpp \
 
 SRC_DIR=src
-INC_DIR=-I include/usr/local/include/opencv2 \
-	  -I/home/pi/opencv-3.2.0/build/include
+INC_DIR=-I/usr/local/include/opencv2 \
+	-I~/opencv-3.2.0/build/include \
+	-I include
 OBJ_DIR= obj
 BIN_DIR= bin
 
