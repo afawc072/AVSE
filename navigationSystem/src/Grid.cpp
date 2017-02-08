@@ -29,8 +29,24 @@
  *******************************************************************************/
 Grid::Grid()
 {
+}
+
+
+
+/*******************************************************************************
+ * Grid
+ *
+ *      Constructor taking a filepath as argument to set the grid to use
+ *
+ *  @param  [in]  aGridFilePath
+ *
+ *******************************************************************************/
+Grid::Grid(string aGridFilePath)
+{
+   mGridFilePath = aGridFilePath;
    resetGrid();
 }
+
 
 
 
@@ -42,7 +58,22 @@ Grid::Grid()
  *******************************************************************************/
 void Grid::resetGrid()
 {
-   readGridFromFile("Grid.txt");
+   readGridFromFile(mGridFilePath);
+}
+
+
+
+/*******************************************************************************
+ * setGridFilePath
+ *
+ *  Sets the file path that will be used to reset the grird
+ *
+ * @param [in]  aFilePath
+ *
+ *******************************************************************************/
+void Grid::setGridFilePath(string aFilePath)
+{
+   mGridFilePath = aFilePath;
 }
 
 

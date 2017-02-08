@@ -1,3 +1,4 @@
+***VERIFY AND CORRECT EQUATION TO FIND THE INITIAL ORIENTATION OF THE ROBOT***
 
 This section of the AVSE contains the c++ model to simulate the Navigation system. All the variables parameters (such as the Grid size in cm or the number of rows and columns) are defined in the source_code/inc/NavSystemCommon.h file. The Grid.txt contains the working grid with the following cell states:
 - F for free cell
@@ -12,19 +13,21 @@ For the Tags and Destination IDs, these are defined when reading the Grid.txt fi
 
 To run the simulation, run the NavSystem executable (type ./bin/NavSystem from this directory) and input the desired destination ID
 
+Here are the file contained in this section: 
 
 ├── bin
 │   └── NavSystem
 ├── Grid.txt
-├── inc
+├── include
 │   ├── Grid.h
 │   ├── NavigationModel.h
 │   └── NavSystemCommon.h
-├── main.cpp
 ├── Makefile
 ├── obj
 │   ├── Grid.d
 │   ├── Grid.o
+│   ├── main.d
+│   ├── main.o
 │   ├── Navigation.d
 │   ├── NavigationModel.d
 │   ├── NavigationModel.o
@@ -34,6 +37,8 @@ To run the simulation, run the NavSystem executable (type ./bin/NavSystem from t
 ├── README.md
 └── src
     ├── Grid.cpp
+    ├── main.cpp
     ├── NavigationModel.cpp
     └── NavSystemCommon.cpp
+
 

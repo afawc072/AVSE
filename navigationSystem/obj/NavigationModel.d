@@ -1,8 +1,8 @@
-obj/NavigationModel.o: src/NavigationModel.cpp inc/NavigationModel.h \
- inc/Grid.h inc/NavSystemCommon.h
+obj/NavigationModel.o: src/NavigationModel.cpp include/NavigationModel.h \
+ include/Grid.h include/NavSystemCommon.h
 
-inc/NavigationModel.h:
+include/NavigationModel.h:
 
-inc/Grid.h:
+include/Grid.h:
 
-inc/NavSystemCommon.h:
+include/NavSystemCommon.h:

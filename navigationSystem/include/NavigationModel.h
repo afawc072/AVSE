@@ -60,7 +60,7 @@ class NavigationModel{
 
 
       // Knowing the tagID and x,z distance from this tag to the robot, we localize the robot in the grid
-      bool localizeRobotInGrid(int aTagID, double aXdist_cm, double aZdist_cm, double aCamServoAngle);
+      bool localizeRobotInGrid(int aTagID, double aXdist_cm, double aZdist_cm, double aCamMarkerAngle, double aCamServoAngle);
 
 
       // Fills the position pointer with the next position in the path

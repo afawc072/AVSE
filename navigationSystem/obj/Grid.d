@@ -1,5 +1,5 @@
-obj/Grid.o: src/Grid.cpp inc/Grid.h inc/NavSystemCommon.h
+obj/Grid.o: src/Grid.cpp include/Grid.h include/NavSystemCommon.h
 
-inc/Grid.h:
+include/Grid.h:
 
-inc/NavSystemCommon.h:
+include/NavSystemCommon.h:

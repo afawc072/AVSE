@@ -79,7 +79,7 @@ int main(int argc, const char **argv)
 {
 
    //Setup Grid
-   Grid myGrid;
+   Grid myGrid("Grid.txt");
    myGrid.printGrid();
 
    // Initialize Navigation object
@@ -124,11 +124,14 @@ int main(int argc, const char **argv)
 
          // 2.2 ROBOT-GRID RELATION
          cout << "CAMANGLE-> ";
-         double camServoAngle;
+         double camServoAngle, camMarkerAngle;
          cin >> camServoAngle; 				// READ FROM ARD
 
+ 	 cout << "CAM_MARKER_ANGLE-> ";
+	 cin >> camMarkerAngle;
+
          // Initialize the robot
-         model.localizeRobotInGrid(tagID, xdist, zdist, camServoAngle);
+         model.localizeRobotInGrid(tagID, xdist, zdist, camMarkerAngle, camServoAngle);
 
          // 3. FIND POTENTIAL PATH TO DESTINATION
          model.calculatePathToDest();

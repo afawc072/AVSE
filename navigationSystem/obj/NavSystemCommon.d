@@ -1,3 +1,3 @@
-obj/NavSystemCommon.o: src/NavSystemCommon.cpp inc/NavSystemCommon.h
+obj/NavSystemCommon.o: src/NavSystemCommon.cpp include/NavSystemCommon.h
 
-inc/NavSystemCommon.h:
+include/NavSystemCommon.h:

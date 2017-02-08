@@ -20,6 +20,7 @@
 #include "NavigationModel.h"
 
 
+
 /*******************************************************************************
  * NavigationModel
  *
@@ -172,21 +173,30 @@ void NavigationModel::updateRobotPosition(int aNewRow, int aNewCol)
  * @param  [in]  aTagID
  * @param  [in]  aXdist_cm
  * @param  [in]  aYdist_cm
+ * @param  [in]  aCamMarkerAngle
  * @param  [in]  aCamServoAngle
  *
  * @return validLocalization
  *
  *******************************************************************************/
-bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double aZdist_cm, double aCamServoAngle)
+bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double aZdist_cm, double aCamMarkerAngle, double aCamServoAngle)
 {
    bool validLocalization = false;
+   double cameraOrientation;
 
+   // Find the angle from the tag to the robot starting from the x axis of the Tag
+   double angleToRobot = atan2(aZdist_cm, aXdist_cm)*180/PI;
+
+   // Get the tag position
    Position tagPos = mrGrid->getTagPositions()[aTagID];
 
+   // Initialize vector to model the 4 possibile direction (right, left, down and up)
    vector<int> row4dir={0, 0, 1,-1};
    vector<int> col4dir={1,-1, 0, 0};
 
    unsigned int i;
+
+   // We first find whether the tag is facing to the right, left, down or up
    for(i = 0 ; i <row4dir.size() ; i++)
    {
       if(mrGrid->isBuffer(tagPos.row + row4dir[i], tagPos.column + col4dir[i]))
@@ -195,31 +205,38 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
       }
    }
 
+   // Transformation matrix from grid to the tag
    int QGtoT[4][4]=  {{ 0 , 0 , 0 , tagPos.row*GRID_CM},
                       { 0 , 0 , 0 , tagPos.column*GRID_CM},
                       { 0 , 1 , 0 , 0},
                       { 0 , 0 , 0 , 1}};;
+
+
+   // The base transformation matrix is modified depending on the orientation of the tag (4 cases)
    switch(i)
    {
-      case 0:
+      case 0: // Tag is facing to the right
 	 QGtoT[0][0] =-1;
 	 QGtoT[1][2] = 1;
+         cameraOrientation = aCamMarkerAngle - angleToRobot + 180;
       break;
 
-      case 1:
+      case 1: // Tag is facing to the left
          QGtoT[0][0] = 1;
          QGtoT[1][2] =-1;
+	 cameraOrientation = aCamMarkerAngle - angleToRobot;
       break;
 
-      case 2:
+      case 2: // Tag is facing down
          QGtoT[1][0] = 1;
          QGtoT[0][2] = 1;
-
+	 cameraOrientation = aCamMarkerAngle - angleToRobot + 90;
       break;
 
-      case 3:
+      case 3: // Tag is facing up
          QGtoT[1][0] =-1;
          QGtoT[0][2] =-1;
+	 cameraOrientation = aCamMarkerAngle - angleToRobot - 90;
 
       break;
 
@@ -228,17 +245,19 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
       break;
    }
 
+   // Calculate the robot position
    int robotRow = round((QGtoT[0][0]*aXdist_cm + QGtoT[0][2]*aZdist_cm+QGtoT[0][3])/GRID_CM);
    int robotCol = round((QGtoT[1][0]*aXdist_cm + QGtoT[1][2]*aZdist_cm+QGtoT[1][3])/GRID_CM);
 
-   cout << "tag is at " <<tagPos.row<<","<<tagPos.column<<", robot is at " <<robotRow <<","<<robotCol<<endl;
+   cout << "Tag detected is at " <<tagPos.row<<","<<tagPos.column<<", robot is at " <<robotRow <<","<<robotCol<<endl;
 
    updateRobotPosition(robotRow,robotCol);
 
+   cout << "Camera orientation is " << cameraOrientation << endl;
 
    // Calculate and set the robot's orientation in respect to the grid
-   double robotOrientation = aCamServoAngle - ((atan2(aZdist_cm,aXdist_cm)*180/PI));
-   robotOrientation = 0; // Temporary
+   double robotOrientation = cameraOrientation - aCamServoAngle;
+
    updateRobotOrientation(robotOrientation);
 
    return validLocalization;
