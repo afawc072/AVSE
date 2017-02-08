@@ -26,6 +26,15 @@ using namespace std;
 /*******************************************************************************
  * tagDetection
  *
+ *    This function is used to detect a tag in the environment. Using the the 
+ * constants "CAMANGLE_START", "CAMANGLE_INCREMENT" and "CAMANGLE_END", a sweep
+ * of the environment is maded by the camera (mounted on the Arduino side) until
+ * a Tag is found. The Tag detection is made through the ___________ of the 
+ * computervision object. The variable passed by reference (TagID, X and Z distances 
+ * from the Tag to the Robot and the camMarkerAngle) are filled in the computervision
+ * function and return to the main function in order for the robot to localize itself
+ * within the grid.
+ *    The function returns true if a tag is found during the sweep.
  *
  *  @param [in]   apProtocol
  *  @param [in]   arTagID
@@ -39,26 +48,29 @@ using namespace std;
  *******************************************************************************/
 static bool tagDetection(Protocol *apProtocol, int &arTagID, double &arxCam, double &arzCam, double &arAngleCamMarker, double &arCamServoAngle)
 {
+   // Initialize required variable/objects
    errorType error;
+   // ComputerVision compVision;
+
    bool foundTag = false;
    double camServoAngle = CAMANGLE_START;
 
    // Loop until either a Tag is found or the camera has done a full sweep
-   while(!foundTag && camServoAngle <= CAMANGLE_END)
+   while( !foundTag && camServoAngle <= CAMANGLE_END )
    {
       // Send CAMANGLE message to Arduino to set the camera angle
-      if(apProtocol->send(CAMANGLE, to_string(camServoAngle), error))
+      if( apProtocol->send(CAMANGLE, to_string(camServoAngle), error) )
       {
          command cmdRcvd;
          string infoRcvd;
 
 	 // Receive the feedback from the Arduino
-         if(apProtocol->receive(NB_TRIES_CAMANGLE, DELAY_CAMANGLE, cmdRcvd, infoRcvd, error))
+         if( apProtocol->receive(NB_TRIES_CAMANGLE, DELAY_CAMANGLE, cmdRcvd, infoRcvd, error) )
          {
-            if(cmdRcvd == END)
+            if( cmdRcvd == END )
             {
                // Call computerVision function to search for a Tag
-//               foundTag = findATag(artagId, arxCam, arzCam, arAngleCamMarker));
+//               foundTag = compVision.findATag(artagId, arxCam, arzCam, arAngleCamMarker));
                if( !foundTag )
                {
                   camServoAngle += CAMANGLE_INCREMENT;
@@ -200,7 +212,7 @@ int main(int argc, const char **argv)
    errorType error;
 
    //Setup Grid
-   Grid myGrid;
+   Grid myGrid("navigationSystem/Grid.txt");
    myGrid.printGrid();
 
    // Initialize Navigation object
@@ -209,7 +221,7 @@ int main(int argc, const char **argv)
    // Open connection to Arduino
    Protocol protocol;
 
-   if(!protocol.init(error))
+   if( !protocol.init(error) )
    {
       cout << PROTOCOL_ERR[error] <<endl;
    }
@@ -218,7 +230,7 @@ int main(int argc, const char **argv)
    else
    {
       // Main loop
-      while(true)
+      while( true )
       {
 
          //1. SET THE FINAL DESTINATION
@@ -228,7 +240,7 @@ int main(int argc, const char **argv)
          do
          {
             cin >> goal_ix; 		 		// READ FROM LCD
-         } while(!model.setDestination(goal_ix));
+         } while( !model.setDestination(goal_ix) );
 
 
          // 2. LOCALIZATION AND ORIENTATION
@@ -244,7 +256,7 @@ int main(int argc, const char **argv)
             // 2.2 ROBOT-GRID RELATION
 
             // Initialize the robot
-            model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker);//, camServoAngle);
+            model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle);
 
             // 3. FIND POTENTIAL PATH TO DESTINATION
             model.calculatePathToDest();
@@ -260,7 +272,7 @@ int main(int argc, const char **argv)
                // Call openCV function to detect a tag and localize the robot in the grid
 	       if( tagDetection(&protocol, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
     	       {
-                  model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker);//, camServoAngle);
+                  model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle);
                }
 	       else
 	       {

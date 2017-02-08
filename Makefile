@@ -1,7 +1,7 @@
 #
 #  Makefile for the Navigation System
 #
-#  Author(s): Alexandre Fawcett, Jean-Sebastien Fiset
+#  Authors: Alexandre Fawcett, Jean-Sebastien Fiset
 #
 
 OBJECT_NAME=AVSE
@@ -19,10 +19,12 @@ NAV_SRC_DIR = navigationSystem/src
 PROT_SRC_DIR = protocol/src
 
 INC_DIR=-I include \
-	-I navigationSystem/inc \
+	-I navigationSystem/include \
 	-I protocol/include #	\
 #	-I computerVision/include \
-#	-I 
+#	-I /usr/local/include/opencv2 \
+#	-I /home/pi/opencv-3.2.0/build/include
+
 OBJ_DIR= obj
 BIN_DIR= bin
 
