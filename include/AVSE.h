@@ -22,6 +22,9 @@
 #include "NavigationModel.h"
 #include "protocol.h"
 
+
+static const string GRID_FILE_PATH = "navigationSystem/Grid.txt";
+
 static const int CAMANGLE_START = -90;
 static const int CAMANGLE_END = 90;
 static const int CAMANGLE_INCREMENT = 45;

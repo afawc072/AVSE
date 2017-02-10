@@ -212,7 +212,7 @@ int main(int argc, const char **argv)
    errorType error;
 
    //Setup Grid
-   Grid myGrid("navigationSystem/Grid.txt");
+   Grid myGrid(GRID_FILE_PATH);
    myGrid.printGrid();
 
    // Initialize Navigation object
