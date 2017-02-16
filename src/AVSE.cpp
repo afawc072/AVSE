@@ -256,49 +256,71 @@ int main(int argc, const char **argv)
             // 2.2 ROBOT-GRID RELATION
 
             // Initialize the robot
-            model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle);
+            if( model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle) )
+	    {
 
-            // 3. FIND POTENTIAL PATH TO DESTINATION
-            model.calculatePathToDest();
-            model.print();
-
-            // 4. MOVE TOWARD GOAL
-	    moveRobot(&model, &protocol);
-
-	    // 5. CHECK IS DESTINATION WAS REACHED
-            if( model.destinationIsReached() )
-            {
-
-               // Call openCV function to detect a tag and localize the robot in the grid
-	       if( tagDetection(&protocol, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
-    	       {
-                  model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle);
-               }
-	       else
+               // 3. FIND POTENTIAL PATH TO DESTINATION
+               if( model.calculatePathToDest() )
 	       {
-	   	  cout << "Didn't find a tag at final destination, no correction can be applied" << endl;
-	       }
+                  model.print();
 
-	       /* If the updated position after detecting a tag does not match
-	          the final destination, a correction is applied */
-               if( !model.destinationIsReached() )
-               {
-	          printf("CORRECTION APPLIED\n");
-                  moveRobot(&model, &protocol);
+                  // 4. MOVE TOWARD GOAL
+	          moveRobot(&model, &protocol);
+
+	          // 5. CHECK IS DESTINATION WAS REACHED
+                  if( model.destinationIsReached() )
+                  {
+
+                     // Call openCV function to detect a tag and localize the robot in the grid
+	             if( tagDetection(&protocol, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
+    	             {
+                        if( !model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle) )
+			{
+			   cout << "Unable to localize robot to apply a correction. Robot should be close to destination"<<endl;
+			}
+                     }
+	             else
+	             {
+	   	        cout << "Didn't find a tag at final destination, no correction can be applied" << endl;
+	             }
+
+	             /* If the updated position after detecting a tag does not match
+	                the final destination, a correction is applied */
+                     if( !model.destinationIsReached() )
+                     {
+	                cout << "CORRECTION APPLIED" << endl;
+
+			if( model.calculatePathToDest() )
+		        {
+                           moveRobot(&model, &protocol);
+                     	}
+			else
+			{
+			   cout << "Unable to calculate path to apply a correction. Robot should be close to destination"<<endl;
+			}
+		     }
+
+                     printf("FINAL\n");				// WRITE TO LCD
+
+                     model.print();
+                     cout << "Now resetting the grid" <<endl;
+	             myGrid.resetGrid();
+                  }
+	          else
+ 	          {
+		      // Destination was not reach for some reason (user/Arduino forced the robot to stop with STOP command)
+	          }
                }
-
-               printf("FINAL\n");				// WRITE TO LCD
-
-               model.print();
-               cout << "Now resetting the grid" <<endl;
-	       myGrid.resetGrid();
-            }
-	    else
- 	    {
-		// Destination was not reach for some reason (user/Arduino forced the robot to stop with STOP command)
-	    }
-         }
-
+	       else // Calculation of the path failed
+	       {
+		  cout << "Unable to calculate the path. Try another destination"<<endl;
+	       }
+	   }
+	   else // Localization of the robot failed
+	   {
+		cout <<"Unable to locate robot. Try to move it closer to a marker"<<endl;
+	   }
+	 }
 	 else // no tag were found
          {
             cout << "NOTAG" <<endl; 			// WRITE TO LCD
