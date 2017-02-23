@@ -22,6 +22,8 @@
 #include "NavigationModel.h"
 #include "protocol.h"
 #include "computervision.h"
+#include <stdio.h>
+#include <time.h>
 
 static const string GRID_FILE_PATH = "data/Grid.txt";
 static const string CAM_PARAM="data/camparam.yml";

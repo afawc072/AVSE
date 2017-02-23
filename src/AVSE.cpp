@@ -197,8 +197,20 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
 }
 
 
-
-
+/*******************************************************************************
+ * LOGFILE
+ *
+ *
+ * CHRISTOPH - https://stackoverflow.com/questions/1425227/how-to-create-files-named-with-current-time 
+ *
+ *******************************************************************************/
+FILE *logfile(void)
+{
+    static char name[32];
+    time_t now = time(0);
+    strftime(name, sizeof(name), "logs/log_%Y_%m_%d_%H-%M.txt", localtime(&now));
+    return fopen(name, "w+");
+}
 
 /*******************************************************************************
  * main
@@ -211,6 +223,10 @@ int main(int argc, const char **argv)
 {
    errorType error;
 
+   FILE *file = logfile();
+   cout << "file opened";
+   fprintf(file, "%s", "test");
+   fflush(file);
    //Setup Grid
    Grid myGrid(GRID_FILE_PATH);
    myGrid.printGrid();
@@ -328,4 +344,5 @@ int main(int argc, const char **argv)
          }
       }
    }
+fclose(file);
 }
