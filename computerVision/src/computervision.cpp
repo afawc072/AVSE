@@ -55,17 +55,21 @@ the use of this software, even if advised of the possibility of such damage.
 *
 *********************************************************************************/
 
-
 #include "computervision.h"
+
 
 computervision::computervision()
 {
 }
 
-int main(){}
+computervision::computervision(string camParam)
+{
+    mCamParam=camParam;
+}
 
-bool computervision::readCameraParameters(string filename, Mat &camMatrix, Mat &distCoeffs) {
-    FileStorage fs(filename, FileStorage::READ);
+
+bool computervision::readCameraParameters(std::string filename, Mat &camMatrix, Mat &distCoeffs) {
+    cv::FileStorage fs(filename, cv::FileStorage::READ);
     if(!fs.isOpened())
         return false;
     fs["camera_matrix"] >> camMatrix;
@@ -82,7 +86,7 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
     //Markers in the camera's frame.
     double xMarker, zMarker;
 
-    Ptr<aruco::DetectorParameters> detectorParams = aruco::DetectorParameters::create();
+    Ptr<cv::aruco::DetectorParameters> detectorParams = cv::aruco::DetectorParameters::create();
     detectorParams->doCornerRefinement = true; // do corner refinement in markers
 
     Ptr<aruco::Dictionary> dictionary =
@@ -93,13 +97,15 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
     Read the cameraParameters in order to get the the matrixs
     for the camera and distCoeffs.
     */
-    bool readOk = readCameraParameters(CAM_PARAM, camMatrix, distCoeffs);
+    cout << mCamParam << endl;
+    
+    bool readOk = readCameraParameters(mCamParam, camMatrix, distCoeffs);
     if(!readOk) {
         cerr << "Invalid camera file" << endl;
         return 0;
         }
 
-    VideoCapture inputVideo;
+    cv::VideoCapture inputVideo;
     /*
     int waitTime;
     if(!video.empty()) {
@@ -110,34 +116,35 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
         waitTime = 10;
     }
     */
-
+    cout << "Video opening" << endl;
     inputVideo.open(0);
-    //waitTime = 10;
+    int waitTime = 10;
 
-    double totalTime = 0;
-    int totalIterations = 0;
+//    double totalTime = 0;
+//    int totalIterations = 0;
 
     while(inputVideo.grab() && !flagCV) {
-        Mat image, imageCopy;
+        cv::Mat image, imageCopy;
         inputVideo.retrieve(image);
 
-        double tick = (double)getTickCount();
+//        double tick = (double)getTickCount();
 
         vector< int > ids;
         vector< vector< Point2f > > corners, rejected;
         vector< Vec3d > rvecs, tvecs;
         // detect markers and estimate pose
-        aruco::detectMarkers(image, dictionary, corners, ids, detectorParams, rejected);
-        if(ids.size() > 0){
-
-          aruco::estimatePoseSingleMarkers(corners, MARKER_LENGTH, camMatrix, distCoeffs, rvecs,tvecs);
+        cv::aruco::detectMarkers(image, dictionary, corners, ids, detectorParams, rejected);
+        image.copyTo(imageCopy);
+	  if(ids.size() > 0){
+	  
+          cv::aruco::estimatePoseSingleMarkers(corners, MARKER_LENGTH, camMatrix, distCoeffs, rvecs,tvecs);
 
           //Set the tagID reference to what was detected.
           tagID=ids[0];
 
           xMarker = tvecs[0][0];
           zMarker = tvecs[0][2];
-          angle = atan2(zMarker,xMarker);
+          angle = atan2(zMarker,xMarker)*180/3.141596;
 
 	        cv::Mat R;
           //Rodrigues Transformation
@@ -163,8 +170,8 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
           Qtr.at<double>(3,3)=1;
 
     	    Qtr=Qtr.inv();
-          xCam = Qtr.at<double>(0,3);
-          zCam = Qtr.at<double>(2,3);
+          xCam = Qtr.at<double>(0,3)*100;
+          zCam = Qtr.at<double>(2,3)*100;
 
           flagCV = true;
 
@@ -203,12 +210,14 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
 
         if(showRejected && rejected.size() > 0)
             aruco::drawDetectedMarkers(imageCopy, rejected, noArray(), Scalar(100, 0, 255));
-
+	*/
         imshow("out", imageCopy);
-        char key = (char)waitKey(waitTime);
-        if(key == 27) break;
+       	
+	char key = (char)waitKey(waitTime);
+        /*
+	if(key == 27) break;
         */
     }
-
+    destroyWindow("out");
     return flagCV;
 }

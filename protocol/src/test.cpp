@@ -77,7 +77,6 @@ if(!test.receive(&rCommand, &rInfo))
 {
 cout << "error" << endl;
 }
-
 //use rCommand and rInfo here
 */
 

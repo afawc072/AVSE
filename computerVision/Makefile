@@ -7,11 +7,10 @@ INC_DIR = -I/usr/local/include/opencv2 \
 	  -I/home/pi/opencv-3.2.0/build/include \
 	  -Iinclude
 
-all: bin/computervision
-
-bin/computervision: obj/computervision.o; $(CXX) $< -o $@ $(LDFLAGS)
+all: obj/computervision.o
 
 obj/computervision.o: src/computervision.cpp; $(CXX) $(INC_DIR) $< -o $@ $(CXXFLAGS)
 
-clean: ; rm -f obj/computervision.o bin/computervision
-
+clean:  ;
+	rm -f obj/computervision.o
+	rm -f obj.computervision.d

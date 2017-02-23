@@ -28,14 +28,15 @@ using namespace std;
 using namespace cv;
 
 // IMPORTANT SETTINGS
-static const int SLEEP_S = 1;//Short Sleep(ms);
-static const int SLEEP_M = 1.5;//Medium Sleep(ms);
-static const int SLEEP_L = 2;//Long Sleep(ms);
+//static const int SLEEP_S = 1;//Short Sleep(ms);
+//static const int SLEEP_M = 1.5;//Medium Sleep(ms);
+//static const int SLEEP_L = 2;//Long Sleep(ms);
 
 
 static const aruco::PREDEFINED_DICTIONARY_NAME DICT_ID = aruco::DICT_ARUCO_ORIGINAL;
 static const float MARKER_LENGTH = 0.1;
-static const string CAM_PARAM="bin/camparm2.yml";
+//static const string CAM_PARAM="data/camparam.yml";
+
 //PROTOCOL DICTIONNARY
 
 
@@ -48,11 +49,14 @@ in the marker's frame.
 */
 public:
 	computervision();
+	computervision(string camParam);
 	bool detectTag(int &tagID, double &xCam, double &zCam, double &angle);
-
+	
 
 
 private:
+
+	string mCamParam;
 
 	bool readCameraParameters(string filename, Mat &camMatrix, Mat &distCoeffs);
 

@@ -251,14 +251,18 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
 
    cout << "Tag detected is at " <<tagPos.row<<","<<tagPos.column<<", robot is at " <<robotRow <<","<<robotCol<<endl;
 
-   updateRobotPosition(robotRow,robotCol);
+   if( !mrGrid->isOccupied(robotRow, robotCol) )
+   {
+      validLocalization = true;
+      updateRobotPosition(robotRow, robotCol);
 
-   cout << "Camera orientation is " << cameraOrientation << endl;
+      cout << "Camera orientation is " << cameraOrientation << endl;
 
-   // Calculate and set the robot's orientation in respect to the grid
-   double robotOrientation = cameraOrientation - aCamServoAngle;
+      // Calculate and set the robot's orientation in respect to the grid
+      double robotOrientation = cameraOrientation - aCamServoAngle;
 
-   updateRobotOrientation(robotOrientation);
+      updateRobotOrientation(robotOrientation);
+   }
 
    return validLocalization;
 }

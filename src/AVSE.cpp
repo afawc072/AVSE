@@ -50,7 +50,7 @@ static bool tagDetection(Protocol *apProtocol, int &arTagID, double &arxCam, dou
 {
    // Initialize required variable/objects
    errorType error;
-   // ComputerVision compVision;
+   computervision compVision(CAM_PARAM);
 
    bool foundTag = false;
    double camServoAngle = CAMANGLE_START;
@@ -70,7 +70,7 @@ static bool tagDetection(Protocol *apProtocol, int &arTagID, double &arxCam, dou
             if( cmdRcvd == END )
             {
                // Call computerVision function to search for a Tag
-//               foundTag = compVision.findATag(artagId, arxCam, arzCam, arAngleCamMarker));
+               foundTag = compVision.detectTag(arTagID, arxCam, arzCam, arAngleCamMarker);
                if( !foundTag )
                {
                   camServoAngle += CAMANGLE_INCREMENT;
@@ -253,6 +253,7 @@ int main(int argc, const char **argv)
          // Attempt to detect the first tag
          if( tagDetection(&protocol, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
          {
+	    cout << "Tag " << tagID << ", xTag: "<< xTag << ", zTag: "<< zTag << ", angle " <<angleCamMarker<<endl;
             // 2.2 ROBOT-GRID RELATION
 
             // Initialize the robot
@@ -284,8 +285,8 @@ int main(int argc, const char **argv)
 	   	        cout << "Didn't find a tag at final destination, no correction can be applied" << endl;
 	             }
 
-	             /* If the updated position after detecting a tag does not match
-	                the final destination, a correction is applied */
+	             /// If the updated position after detecting a tag does not match
+	             //   the final destination, a correction is applied 
                      if( !model.destinationIsReached() )
                      {
 	                cout << "CORRECTION APPLIED" << endl;
