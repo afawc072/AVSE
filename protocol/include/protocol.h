@@ -102,7 +102,6 @@ public:
   bool receive(int aNumAttempts, int aDelay, command &apCommand, string &apInfoR, errorType &apE );
   bool closeP(errorType &apE);
 
-
 private:
 
 	int fd;

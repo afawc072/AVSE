@@ -23,6 +23,7 @@ Protocol::Protocol()
 {
 }
 
+
 bool Protocol::init(errorType &apE)
 {
   system("bin/pybaud.sh");
@@ -145,7 +146,7 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
 {
   //Define the command received as a String
   string cmd = PROTOCOL_DICT[aCommand];
-  sleep(SLEEP_M);
+  //sleep(SLEEP_M);
   //Size of the command string
   int sizeCmd = cmd.length();
   int sizeInfo;
@@ -195,7 +196,7 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
   i++;
   bufw[i]=HEADER_END;
   cout << "BUFW " << bufw << endl;
-  sleep(SLEEP_L);
+  sleep(SLEEP_S);
   int w=write(fd, bufw, NB_BYTES);
   //ERROR RETURN
   if(w!=-1)

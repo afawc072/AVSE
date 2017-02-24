@@ -187,8 +187,14 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
    // Find the angle from the tag to the robot starting from the x axis of the Tag
    double angleToRobot = atan2(aZdist_cm, aXdist_cm)*180/PI;
 
-   // Get the tag position
-   Position tagPos = mrGrid->getTagPositions()[aTagID];
+
+   if( aTagID < 1 || aTagID > (int) (mrGrid->getTagPositions().size()))
+   {
+      cout << "Invalid Tag ID"<<endl;
+      return false;
+   }
+   // Get the tag position (tagID starts at 1 and vector index at 0)
+   Position tagPos = mrGrid->getTagPositions()[aTagID-1];
 
    // Initialize vector to model the 4 possibile direction (right, left, down and up)
    vector<int> row4dir={0, 0, 1,-1};
@@ -259,7 +265,7 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
       cout << "Camera orientation is " << cameraOrientation << endl;
 
       // Calculate and set the robot's orientation in respect to the grid
-      double robotOrientation = cameraOrientation - aCamServoAngle;
+      double robotOrientation = -(cameraOrientation - aCamServoAngle);
 
       updateRobotOrientation(robotOrientation);
    }
@@ -290,6 +296,7 @@ bool NavigationModel::nextPosition(Position *apPos)
       printf("nextPos is %i, %i\n",mPathToDest.top().row, mPathToDest.top().column);
       apPos->row = mPathToDest.top().row;
       apPos->column = mPathToDest.top().column;
+      mrGrid->removePathCell(*apPos);
       mPathToDest.pop();
    }
    else

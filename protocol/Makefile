@@ -6,7 +6,7 @@
 
 OBJECT_NAME=protocol
 
-CPP_SOURCES=$(SRC_DIR)/test.cpp \
+CPP_SOURCES=$(SRC_DIR)/test.cpp\
 	$(SRC_DIR)/protocol.cpp
 
 SRC_DIR=src

@@ -37,6 +37,7 @@ using namespace std;
  *    The function returns true if a tag is found during the sweep.
  *
  *  @param [in]   apProtocol
+ *  @param [in]   aMaxTagID
  *  @param [in]   arTagID
  *  @param [in]   arxCam
  *  @param [in]   arzCam
@@ -46,20 +47,20 @@ using namespace std;
  *  @return    foundTag
  *
  *******************************************************************************/
-static bool tagDetection(Protocol *apProtocol, int &arTagID, double &arxCam, double &arzCam, double &arAngleCamMarker, double &arCamServoAngle)
+static bool tagDetection(Protocol *apProtocol, int aMaxTagID, int &arTagID, double &arxCam, double &arzCam, double &arAngleCamMarker, double &arCamServoAngle)
 {
    // Initialize required variable/objects
    errorType error;
    computervision compVision(CAM_PARAM);
 
    bool foundTag = false;
-   double camServoAngle = CAMANGLE_START;
+   arCamServoAngle = CAMANGLE_START;
 
    // Loop until either a Tag is found or the camera has done a full sweep
-   while( !foundTag && camServoAngle <= CAMANGLE_END )
+   while( !foundTag && arCamServoAngle <= CAMANGLE_END )
    {
       // Send CAMANGLE message to Arduino to set the camera angle
-      if( apProtocol->send(CAMANGLE, to_string(camServoAngle), error) )
+      if( apProtocol->send(CAMANGLE, to_string(arCamServoAngle), error) )
       {
          command cmdRcvd;
          string infoRcvd;
@@ -70,10 +71,10 @@ static bool tagDetection(Protocol *apProtocol, int &arTagID, double &arxCam, dou
             if( cmdRcvd == END )
             {
                // Call computerVision function to search for a Tag
-               foundTag = compVision.detectTag(arTagID, arxCam, arzCam, arAngleCamMarker);
+               foundTag = compVision.detectTag(aMaxTagID, arTagID, arxCam, arzCam, arAngleCamMarker);
                if( !foundTag )
                {
-                  camServoAngle += CAMANGLE_INCREMENT;
+                  arCamServoAngle += CAMANGLE_INCREMENT;
                }
             }
             else // cmdRcvd != END
@@ -225,10 +226,11 @@ int main(int argc, const char **argv)
 
    FILE *file = logfile();
    cout << "file opened";
-   fprintf(file, "%s", "test");
+   fprintf(file, "%s", "test \n");
    fflush(file);
    //Setup Grid
    Grid myGrid(GRID_FILE_PATH);
+   
    myGrid.printGrid();
 
    // Initialize Navigation object
@@ -251,10 +253,10 @@ int main(int argc, const char **argv)
 
          //1. SET THE FINAL DESTINATION
          int goal_ix;
-         cout << "DESTID-> ";
 
          do
          {
+            cout << "DESTID-> ";
             cin >> goal_ix; 		 		// READ FROM LCD
          } while( !model.setDestination(goal_ix) );
 
@@ -264,12 +266,12 @@ int main(int argc, const char **argv)
          // 2.1 CAMERA-TAG RELATION
          int tagID;
          double xTag, zTag, angleCamMarker, camServoAngle;
-
+         int maxTagID = myGrid.getTagPositions().size();
 
          // Attempt to detect the first tag
-         if( tagDetection(&protocol, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
+         if( tagDetection(&protocol, maxTagID, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
          {
-	    cout << "Tag " << tagID << ", xTag: "<< xTag << ", zTag: "<< zTag << ", angle " <<angleCamMarker<<endl;
+	    cout << "Tag " << tagID << ", xTag: "<< xTag << ", zTag: "<< zTag << ", angle " <<angleCamMarker << ",camangle " << camServoAngle<<endl;
             // 2.2 ROBOT-GRID RELATION
 
             // Initialize the robot
@@ -289,7 +291,7 @@ int main(int argc, const char **argv)
                   {
 
                      // Call openCV function to detect a tag and localize the robot in the grid
-	             if( tagDetection(&protocol, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
+	             if( tagDetection(&protocol, maxTagID, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
     	             {
                         if( !model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle) )
 			{

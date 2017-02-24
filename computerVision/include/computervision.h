@@ -23,6 +23,7 @@
 #include <opencv2/core.hpp>
 #include <opencv2/calib3d.hpp>
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 using namespace cv;
@@ -32,6 +33,7 @@ using namespace cv;
 //static const int SLEEP_M = 1.5;//Medium Sleep(ms);
 //static const int SLEEP_L = 2;//Long Sleep(ms);
 
+static const int TIME_DELAY = 10;
 
 static const aruco::PREDEFINED_DICTIONARY_NAME DICT_ID = aruco::DICT_ARUCO_ORIGINAL;
 static const float MARKER_LENGTH = 0.1;
@@ -50,8 +52,8 @@ in the marker's frame.
 public:
 	computervision();
 	computervision(string camParam);
-	bool detectTag(int &tagID, double &xCam, double &zCam, double &angle);
-	
+	bool detectTag(int aMaxTagID, int &tagID, double &xCam, double &zCam, double &angle);
+
 
 
 private:

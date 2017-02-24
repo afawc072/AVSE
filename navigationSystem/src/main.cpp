@@ -93,10 +93,10 @@ int main(int argc, const char **argv)
 
       //1. SET THE FINAL DESTINATION
       int goal_ix;
-      cout << "DESTID-> ";
 
       do
       {
+         cout << "DESTID-> ";
          cin >> goal_ix; 		 		// READ FROM LCD
       } while(!model.setDestination(goal_ix));
 
@@ -131,18 +131,18 @@ int main(int argc, const char **argv)
 	 cin >> camMarkerAngle;
 
          // Initialize the robot
-         model.localizeRobotInGrid(tagID, xdist, zdist, camMarkerAngle, camServoAngle);
-
-         // 3. FIND POTENTIAL PATH TO DESTINATION
-         model.calculatePathToDest();
-         model.print();
-
-         // 4. MOVING TOWARD GOAL
-	 moveRobot(&model);
-
-         if(model.destinationIsReached())
+         if(model.localizeRobotInGrid(tagID, xdist, zdist, camMarkerAngle, camServoAngle))
          {
-            // Call openCV function
+            // 3. FIND POTENTIAL PATH TO DESTINATION
+            model.calculatePathToDest();
+            model.print();
+
+            // 4. MOVING TOWARD GOAL
+	    moveRobot(&model);
+
+            if(model.destinationIsReached())
+            {
+               // Call openCV function
 
             /*foundTag = findATag(&tagID, &xdist, &ydist);
             localizeRobotInGrid(model, tagID, xdist, ydist, 0);
@@ -153,15 +153,16 @@ int main(int argc, const char **argv)
                moveRobot(&model);
             }*/
 
-            printf("FINAL\n");				// WRITE TO LCD
+               printf("FINAL\n");				// WRITE TO LCD
 
-            model.print();
-            myGrid.resetGrid();
+               model.print();
+               myGrid.resetGrid();
+            }
          }
-      }
-      else
-      {
-         cout << "NOTAG" <<endl; 			// WRITE TO LCD
-      }
+         else
+         {
+            cout << "NOTAG" <<endl; 			// WRITE TO LCD
+         }
+     }
    }
 }

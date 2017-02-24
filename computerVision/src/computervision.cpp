@@ -78,7 +78,8 @@ bool computervision::readCameraParameters(std::string filename, Mat &camMatrix, 
 }
 
 
-bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &angle) {
+bool computervision::detectTag(int aMaxTagID, int &tagID, double &xCam, double &zCam, double &angle) {
+    
     //CommandLineParser parser(argc, argv, keys);
     //parser.about(about);
     bool flagCV = false;
@@ -106,28 +107,17 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
         }
 
     cv::VideoCapture inputVideo;
-    /*
-    int waitTime;
-    if(!video.empty()) {
-        inputVideo.open(video);
-        waitTime = 0;
-    } else {
-        inputVideo.open(camId);
-        waitTime = 10;
-    }
-    */
+
     cout << "Video opening" << endl;
     inputVideo.open(0);
     int waitTime = 10;
+    
+    clock_t flagT = clock();
 
-//    double totalTime = 0;
-//    int totalIterations = 0;
-
-    while(inputVideo.grab() && !flagCV) {
+    while(inputVideo.grab() && !flagCV && ((clock()-flagT)/(double) CLOCKS_PER_SEC)<TIME_DELAY) {
         cv::Mat image, imageCopy;
         inputVideo.retrieve(image);
 
-//        double tick = (double)getTickCount();
 
         vector< int > ids;
         vector< vector< Point2f > > corners, rejected;
@@ -135,7 +125,7 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
         // detect markers and estimate pose
         cv::aruco::detectMarkers(image, dictionary, corners, ids, detectorParams, rejected);
         image.copyTo(imageCopy);
-	  if(ids.size() > 0){
+	  if(ids.size() > 0 && ids[0]>0 && ids[0]<= aMaxTagID){
 	  
           cv::aruco::estimatePoseSingleMarkers(corners, MARKER_LENGTH, camMatrix, distCoeffs, rvecs,tvecs);
 
@@ -180,43 +170,9 @@ bool computervision::detectTag(int &tagID, double &xCam, double &zCam, double &a
 	    //cout << " 31: " << Qtr.at<double>(2,0) << " 32: " << Qtr.at<double>(2,1) << " 33: " << Qtr.at<double>(2,2) <<"3,4 "  << Qtr.at<double>(2,3) << endl;
         }
 
-        /*
-        double currentTime = ((double)getTickCount() - tick) / getTickFrequency();
-        totalTime += currentTime;
-        totalIterations++;
-        */
-
-        /*
-        if(totalIterations % 30 == 0) {
-            cout << "Detection Time = " << currentTime * 1000 << " ms "
-                 << "(Mean = " << 1000 * totalTime / double(totalIterations) << " ms)" << endl;
-        }
-        */
-
-        // draw results
-
-        //image.copyTo(imageCopy);
-        /*
-        if(ids.size() > 0) {
-            aruco::drawDetectedMarkers(imageCopy, corners, ids);
-
-            if(estimatePose) {
-                for(unsigned int i = 0; i < ids.size(); i++)
-                    aruco::drawAxis(imageCopy, camMatrix, distCoeffs, rvecs[i], tvecs[i],
-                                    markerLength * 0.5f);
-            }
-        }
-
-
-        if(showRejected && rejected.size() > 0)
-            aruco::drawDetectedMarkers(imageCopy, rejected, noArray(), Scalar(100, 0, 255));
-	*/
         imshow("out", imageCopy);
        	
 	char key = (char)waitKey(waitTime);
-        /*
-	if(key == 27) break;
-        */
     }
     destroyWindow("out");
     return flagCV;
