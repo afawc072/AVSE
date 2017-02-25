@@ -20,6 +20,8 @@ byte irRight; //Value of right wheel encoder
 const float pi = 3.1415; //Pi
 const float wheelTicks = 64; //Total ticks per wheel rotation
 const float wheelRadius = 2.7; //In cm
+//const float wheelRadius = 2.8;
+//const float wheelBase = 20.25;
 const float wheelBase = 19.05; //In cm
 
 //Translational Velocity
@@ -61,7 +63,8 @@ float errorD=0; //D error for the PID
 float errorHeading=0;
 float errorPrevious=0; //Extra error for PID calculations
 
-float Kp = 50; //P tuning parameter
+float Kp = 50;
+//float Kp = 50; //P tuning parameter
 float Ki = 1/1000; //I tuning parameter
 float Kd = 0.1; //D tuning parameter
 
@@ -77,6 +80,8 @@ int tempCount = 0;
 Servo leftServo; //Servo motor to control the left wheel
 Servo rightServo; //Servo motor to control the right wheel
 Servo cameraServo; //Servo motor to control the camera
+
+int cameraAngle = 0;
 
 unsigned long t1 = 0;
 unsigned long t2 = 0;
@@ -115,6 +120,13 @@ void setup() {
 
     leftServo.writeMicroseconds(1355);
     rightServo.writeMicroseconds(1330);
+    cameraServo.write(0);
+    //Verify adjustement on camera to match
+    //173 == to the left
+    //88 == centre
+    //0 to the right
+    //
+    
     /*
     //CALL FUNCTION FOR SWEEP TO FIND TAG
     //findFirstTag();
@@ -186,6 +198,8 @@ void loop() {
         
         if(reached)
         {  
+          leftServo.writeMicroseconds(1355);
+          rightServo.writeMicroseconds(1330);
            // YANNICK FUNCTION -> format : updateSensorDistances();
            updateBufferzoneDist();
           
@@ -211,8 +225,13 @@ void loop() {
       else if(cmd.equals("CAMANGLE"))
       {
          float angle = atof(info.c_str());
-  
-         test_LED(angle); // temporary test to see if angle was properly received
+
+          //camAngle function
+          //Angle + 90
+          //GLobal variable camPosition
+          //Verify if angle "directly" or 
+          camAngle(angle);
+         //test_LED(angle); // temporary test to see if angle was properly received
         
          bool flagCam = true;    
            
@@ -322,6 +341,7 @@ bool goToGoal(float dX, float dY)
   
     float X2 = pow(dX, 2); //dX^2
     float Y2 = pow(dY, 2); //dY^2
+    //Vo=5;
     Vo = 2 * sqrt(Y2 + X2); //Translational velocity, currently bassed on distance to goal
   
     
@@ -350,8 +370,8 @@ bool goToGoal(float dX, float dY)
     flagReach = destinationReached(dX, dY);
   }
 
-  leftServo.writeMicroseconds(1355);
-  rightServo.writeMicroseconds(1330);
+  //leftServo.writeMicroseconds(1355);
+  //rightServo.writeMicroseconds(1330);
 
   return flagReach;
   
@@ -458,7 +478,7 @@ void updateRightTick()
 bool destinationReached(float goalX, float goalY)
 {
   //Verify if goal is reached, return true if yes, false if not
-  if(round(abs(positionX)) > abs(goalX) && round(abs(positionY)) > abs(goalY))
+  if (abs(positionX) > abs(goalX) && abs(positionY) > abs(goalY))
   {
     return true;
   }
@@ -466,6 +486,26 @@ bool destinationReached(float goalX, float goalY)
   {
     return false;
   }
+}
+
+void camAngle(int angle)
+{
+  //-90 < angle < 90
+  //cameraServo.write(angle+90);
+
+  if (angle > 0)
+  {
+    cameraAngle =  map(angle, 1, 90, 89, 173);
+  }
+  else if (angle < 0)
+  {
+    cameraAngle = map(angle, -90, -1, 0, 87)
+  }
+  else
+  {
+    cameraAngle = 88;
+  }
+  cameraServo.write(cameraAngle);
 }
 
 
