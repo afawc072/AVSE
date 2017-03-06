@@ -19,10 +19,16 @@ byte irRight; //Value of right wheel encoder
 //CONSTANTS
 const float pi = 3.1415; //Pi
 const float wheelTicks = 64; //Total ticks per wheel rotation
-const float wheelRadius = 2.7; //In cm
-//const float wheelRadius = 2.8;
+
+//const float wheelRadius = 2.7; //In cm
+//const float wheelRadiusL = 2.8; //Radius of left wheel
+//const float wheelRadiusR = 2.9; //Radius of right wheel
+const float wheelRadiusL = 3;
+const float wheelRadiusR = 3;
+
 //const float wheelBase = 20.25;
 const float wheelBase = 19.05; //In cm
+//const float wheelBase = 18.5;
 
 //Translational Velocity
 double Vo = 0;
@@ -43,8 +49,10 @@ float positionX = 0; //X position of the robot
 float positionXOld = 0;
 float positionY = 0; //Y position of the robot
 float positionYOld = 0;
-float heading = 0; //Heading angle of the robot
+float heading = 0;
 float headingOld = 0;
+//float heading = -1.57; //Heading angle of the robot, changed from 0 to prevent wierd first straight line navigation
+//float headingOld = -1.57;
 
 //PID
 float dX; //X difference
@@ -63,7 +71,7 @@ float errorD=0; //D error for the PID
 float errorHeading=0;
 float errorPrevious=0; //Extra error for PID calculations
 
-float Kp = 50;
+float Kp = 30;
 //float Kp = 50; //P tuning parameter
 float Ki = 1/1000; //I tuning parameter
 float Kd = 0.1; //D tuning parameter
@@ -121,16 +129,10 @@ void setup() {
     leftServo.writeMicroseconds(1355);
     rightServo.writeMicroseconds(1330);
     cameraServo.write(0);
-    //Verify adjustement on camera to match
-    //173 == to the left
-    //88 == centre
-    //0 to the right
-    //
     
     /*
     //CALL FUNCTION FOR SWEEP TO FIND TAG
     //findFirstTag();
-
     //GET POSITION FROM RASPBERRY PI
     //getInitialPosition();
     //moving = true;
@@ -138,9 +140,7 @@ void setup() {
     goalX = 0; //X value for testing
     goalY = 0; //Y value for testing
     
-
     moving = true; //To be changed after integration with Pi to be modified after we get the intial position.
-
     */
 }
 
@@ -341,28 +341,39 @@ bool goToGoal(float dX, float dY)
   
     float X2 = pow(dX, 2); //dX^2
     float Y2 = pow(dY, 2); //dY^2
-    //Vo=5;
-    Vo = 2 * sqrt(Y2 + X2); //Translational velocity, currently bassed on distance to goal
+    //Vo=20;
+    //Vo = 2 * sqrt(Y2 + X2); //Translational velocity, currently bassed on distance to goal
+    Vo = 5 * sqrt(Y2 + X2);
   
     
     errorP = errorHeading; //Proportional error
     errorI = errorI + (errorHeading * dt); //Integral error
     errorD = (errorHeading - errorPrevious) / dt; //Derivative error
 
-    Serial.print("eH: ");
-    Serial.print(errorHeading);
-    Serial.print(" pX: ");
-    Serial.print(positionX);
-    Serial.print(" pY: ");
-    Serial.println(positionY);
+//    Serial.print("eH: ");
+//    Serial.print(errorHeading);
+//    Serial.print(" DL: ");
+//    Serial.print(distanceLeft);
+//    Serial.print(" DR: ");
+//    Serial.print(distanceRight);
+//    Serial.print(" DCenter: ");
+//    Serial.println(distanceCenter);
+//    Serial.print(" Ltick: ");
+//    Serial.print(leftCountNew);
+//    Serial.print(" RTick: ");
+//    Serial.println(rightCountNew);
+    //Serial.print(" pX: ");
+    //Serial.print(positionX);
+    //Serial.print(" pY: ");
+    //Serial.println(positionY);
     
     errorPrevious = errorHeading; //Store previous error
     timeOld = timeCurrent; //Reset time
     
     w = (Kp * errorP) + (Ki * errorI) + (Kd * errorD); //Result of PID
     
-    velocityLeft = ((2*Vo - w*wheelBase) / (2*wheelRadius)); //Calculated velocity of left wheel
-    velocityRight = ((2*Vo + w*wheelBase) / (2*wheelRadius)); //Calculated velocity of right wheel
+    velocityLeft = ((2*Vo - w*wheelBase) / (2*wheelRadiusL)); //Calculated velocity of left wheel
+    velocityRight = ((2*Vo + w*wheelBase) / (2*wheelRadiusR)); //Calculated velocity of right wheel
     
     velocityToPWM();
     //FUNCTION FOR REACHED 
@@ -370,8 +381,6 @@ bool goToGoal(float dX, float dY)
     flagReach = destinationReached(dX, dY);
   }
 
-  //leftServo.writeMicroseconds(1355);
-  //rightServo.writeMicroseconds(1330);
 
   return flagReach;
   
@@ -383,8 +392,8 @@ bool goToGoal(float dX, float dY)
 *******************************************************************/
 void getPosition()
 {
-  distanceLeft = 2 * pi * wheelRadius * (leftCountNew / wheelTicks); //Distance traveled by the left wheel
-  distanceRight = 2 * pi * wheelRadius * (rightCountNew / wheelTicks); //Distance traveled by the right wheel
+  distanceLeft = 2 * pi * wheelRadiusL * (leftCountNew / wheelTicks); //Distance traveled by the left wheel
+  distanceRight = 2 * pi * wheelRadiusR * (rightCountNew / wheelTicks); //Distance traveled by the right wheel
   distanceCenter = (distanceLeft + distanceRight) / 2; //Distance traveled by the center of the robot
 
   //Change since last call
@@ -412,43 +421,40 @@ void velocityToPWM()
   //leftServo zero point = 1355ms
   //rightServo zero point = 1330ms
   
-  //Make sure the values are in a range of 180
-  if (velocityLeft >=90)
+  //Make sure the values are in a range of 200
+  if (velocityLeft >=100)
   {
-    velocityLeft = 90;
+    velocityLeft = 100;
   }
-  else if (velocityLeft <=-90)
+  else if (velocityLeft <=-100)
   {
-    velocityLeft = -90;
+    velocityLeft = -100;
   }
-  if (velocityRight >=90)
+  if (velocityRight >=100)
   {
-    velocityRight = 90;
+    velocityRight = 100;
   }
-  else if (velocityRight <=-90)
+  else if (velocityRight <=-100)
   {
-    velocityRight = -90;
+    velocityRight = -100;
   }
-
-  //Make velocities between 0 and 180
-  velocityLeft = velocityLeft + 90;
-  velocityRight = velocityRight + 90;
 
   //Translate value to some usable by the writeMicroseconds() function
   //Range between value is kept the same around their zero point
   //Right wheel input for the map() function has been inverted because the motor is mounted the opposite way on the robot
-  mappedVelocityLeft = map(velocityLeft, 0, 180, 1025, 1685); //Keep same range as other wheel
-  mappedVelocityRight = map(velocityRight, 180, 0, 1000, 1660);
+  //mappedVelocityLeft = map(velocityLeft, -100, 100, 1025, 1685); //Keep same range as other wheel
+  mappedVelocityLeft = map(velocityLeft, -100, 100, 1025, 1650);
+  mappedVelocityRight = map(velocityRight, 100, -100, 1000, 1660);
     
   //If the wheel is suppose to go in reverse, make it stop as to not mess with the odometry ticks
-  if(mappedVelocityLeft <= 1355)
+  /*if(mappedVelocityLeft <= 1355)
   {
     mappedVelocityLeft = 1355;
   }
   else if (mappedVelocityRight >=1330)
   {
     mappedVelocityRight = 1330;
-  }
+  }*/
 
   //Write the speed values into the motors to make them rotate appropriatly
   leftServo.writeMicroseconds(mappedVelocityLeft);
@@ -461,19 +467,41 @@ void velocityToPWM()
 *******************************************************************/
 void updateLeftTick()
 {
-  leftCountNew++;
+  if(mappedVelocityLeft < 1355)
+  {
+    leftCountNew--;
+  }
+  else
+  {
+    leftCountNew++;
+  }
+  
+  //leftCountNew++;
 }
 
-/*******************************************************************
+/*********************************************************************
 * Function to update the right wheel tick count on interrupt
-*******************************************************************/
+* If the wheel is going forward, increase. 
+* If it is going backwards, decrease
+**********************************************************************/
 void updateRightTick()
 {
-  rightCountNew++;
+  if(mappedVelocityRight > 1330)
+  {
+    rightCountNew--;
+  }
+  else
+  {
+    rightCountNew++;
+  }
+  
+  //rightCountNew++;
 }
 
 /*******************************************************************
 * Function to verify if the current destination has been reached
+* If the wheel is going forward, increase
+* If it is going backwards, decrease
 *******************************************************************/
 bool destinationReached(float goalX, float goalY)
 {
@@ -490,8 +518,9 @@ bool destinationReached(float goalX, float goalY)
 
 void camAngle(int angle)
 {
-  //-90 < angle < 90
-  //cameraServo.write(angle+90);
+  //-90 <= angle <= 90
+  //Verify adjustement on camera to match
+  //173 == to the left, 88 == Centre, 0 == right
 
   if (angle > 0)
   {
@@ -499,7 +528,7 @@ void camAngle(int angle)
   }
   else if (angle < 0)
   {
-    cameraAngle = map(angle, -90, -1, 0, 87)
+    cameraAngle = map(angle, -90, -1, 0, 87);
   }
   else
   {
