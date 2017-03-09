@@ -1,6 +1,37 @@
 #include <Servo.h>
 #include <math.h> 
 
+/*************
+Yannick
+****************/
+//NewPing Library for Arduino
+//Author:  Tim Eckel
+//Contact: tim@leethost.com
+#include <NewPing.h>
+
+#define SONAR_NUM     5 // Number of sensors.
+#define CYCLE         5 // Number of cycle
+#define MAX_DISTANCE 50 // Maximum distance (in cm) to ping.
+#define PING_INTERVAL 50 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).
+#define MIN_DISTANCE 15
+
+unsigned long pingTimer[SONAR_NUM]; // Holds the times when the next ping should happen for each sensor.
+float cm[SONAR_NUM];         // Where the ping distances are stored.
+uint8_t currentCycle=0;             
+uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
+
+NewPing sonar[SONAR_NUM] = {     // Sensor object array.
+  NewPing(28, 30, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
+  NewPing(32, 34, MAX_DISTANCE),
+  NewPing(36, 38, MAX_DISTANCE),
+  NewPing(40, 42, MAX_DISTANCE),
+  NewPing(44, 46, MAX_DISTANCE),
+};
+
+/****************
+ END Yanick
+ ****************/
+
 //ODOMETRY VARIABLES
 int leftCount = 0;  
 int leftCountOld = 0;
@@ -118,8 +149,8 @@ void setup() {
     
     t1 = millis();
     
-    leftServo.attach(36); //Attach left wheel servo
-    rightServo.attach(48); //Attach right wheel servo
+    leftServo.attach(22); //Attach left wheel servo
+    rightServo.attach(23); //Attach right wheel servo
     cameraServo.attach(9); //Attach camera servo
 
     //Setup interrupts for encoders, to be called on change
@@ -129,6 +160,17 @@ void setup() {
     leftServo.writeMicroseconds(1355);
     rightServo.writeMicroseconds(1330);
     cameraServo.write(0);
+
+    /**********
+     * Yannick
+     *********/
+   //  pingTimer[0] = millis() + 75;           // First ping starts at 75ms, gives time for the Arduino to chill before starting.
+   //  for (uint8_t i = 1; i < SONAR_NUM; i++) // Set the starting time for each sensor.
+   //     pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
+
+     /***********
+      * END Yannick
+      ************/
     
     /*
     //CALL FUNCTION FOR SWEEP TO FIND TAG
@@ -185,6 +227,8 @@ void loop() {
       // The RPi wants to send the next position vector (in respect to robot's orientation)
       else if(cmd.equals("NEXT"))
       { 
+
+  //      Serial.println("test");
         // Get the x and y distances       
         float x, y;
         char* y_char = strchr(info.c_str(),',');
@@ -195,22 +239,23 @@ void loop() {
         
         reached = goToGoal(y,-x);
         //test_LED(round(x+y)); //Temporary test to see if vector was properly received
-        
+//        Serial.println("GO TO GOAL");
         if(reached)
         {  
-          leftServo.writeMicroseconds(1355);
-          rightServo.writeMicroseconds(1330);
-           // YANNICK FUNCTION -> format : updateSensorDistances();
-           updateBufferzoneDist();
+           leftServo.writeMicroseconds(1355);
+           rightServo.writeMicroseconds(1330);
           
+           bool feedback=updateSensors();
+
            String infoSensor = "";
            int i;      
+           
            // Loop to create the info section of the message containing the distances in the buffer zone (0 if not)    
            while( i < (NUM_SENSORS-1) )
            {
-               infoSensor += String(bufferzone_distances[i++])+",";
+               infoSensor += String(cm[i++])+",";
             }
-            infoSensor += String(bufferzone_distances[i]);
+            infoSensor += String(cm[i]);
             
             sendToPi("REACHED",infoSensor);   
         }
@@ -268,32 +313,6 @@ void sendToPi(String command, String info)
   Serial.print(message);
 }
 
-
-/*******************************************************************
-* Function that loops through the obstacle_distances array and sends
-* a message to the RPi to add the obstacles in the grid.
-*******************************************************************/
-void updateBufferzoneDist(){
-    /*
-    * The goal here would be to loop through sensor distances
-    * to determine if a distance is smaller than threshold.
-    * 
-    * ---> WILL IT BE POSSIBLE TO DETECT AN OBSTACLE WITH 1 OR 3 SENSORS? 
-    * ---> IF ONLY 1 DETECTS A SMALL DISTANCE, HOW TO ADD OBSTACLE? (W/ 2TRIANGULATION OK)
-    
-    for(int i=0 ; i < NUM_SENSORS ; i++)
-    {
-      if(condition to be in bufferzone - using MAX_DIST and MIN_DIST ?)
-      {
-         bufferzone_distances[i] = obstacle_distances[i];
-      }
-      else
-      {
-         bufferzone_distances[i] = 0;
-      }
-    }
-    */
-}
 
 /*******************************************************************
 * Function to bring the robot from its current position
@@ -362,10 +381,12 @@ bool goToGoal(float dX, float dY)
 //    Serial.print(leftCountNew);
 //    Serial.print(" RTick: ");
 //    Serial.println(rightCountNew);
-    //Serial.print(" pX: ");
-    //Serial.print(positionX);
-    //Serial.print(" pY: ");
-    //Serial.println(positionY);
+//    Serial.print(" pX: ");
+//    Serial.print(positionX);
+//    Serial.print(" pY: ");
+//    Serial.println(positionY);
+//
+    Serial.print(""); //WORKAROUND ... to figure out ...
     
     errorPrevious = errorHeading; //Store previous error
     timeOld = timeCurrent; //Reset time
@@ -380,7 +401,6 @@ bool goToGoal(float dX, float dY)
     
     flagReach = destinationReached(dX, dY);
   }
-
 
   return flagReach;
   
@@ -549,3 +569,53 @@ void test_LED(int n){
       delay(500); 
     }
 }
+
+/***************************************************************
+ * Yannick Functions
+ ***************************************************************/
+
+/*******************************************************************
+* Function that loops through the obstacle_distances array and sends
+* a message to the RPi to add the obstacles in the grid.
+*******************************************************************/
+
+ bool updateSensors(){
+  //Serial.println("IN FUNCTION");
+    bool noWarning = true;
+    // Get measures
+    while(true)
+    {
+    for (currentSensor = 0; currentSensor < SONAR_NUM; currentSensor++) {// Loop through all the sensors.
+        float max_dist = -1;
+       // for(int i = 0 ; i < 3 ; i++)
+       // {
+           cm[currentSensor] = sonar[currentSensor].ping_median(CYCLE) / US_ROUNDTRIP_CM;
+          // if(temp>max_dist)
+           //{
+            //  max_dist = temp;
+          // }
+           delay(50);
+        //}
+        //cm[currentSensor] = max_dist;
+        //cm[currentSensor] = sonar[currentSensor].convert_cm(echoTime);                     // Do the ping (processing continues, interrupt will call echoCheck to look for echo).
+//           Serial.print(currentSensor);
+//  Serial.print(" ");
+//  Serial.println(cm[currentSensor]);
+        if(cm[currentSensor] != 0 && cm[currentSensor] < MIN_DISTANCE)
+        {
+      //b    Serial.println("FUNCTION FALSE");
+           cm[currentSensor] = -1;
+           noWarning = false;
+        }
+      }
+    Serial.print(noWarning);
+  Serial.print(" Distances: ");
+  for(int i = 0; i < SONAR_NUM ; i++){
+    Serial.print(cm[i]);
+    Serial.print("                  ");
+  }
+  Serial.println();
+    } 
+     return noWarning;
+}
+// 
