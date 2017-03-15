@@ -99,7 +99,7 @@ bool computervision::detectTag(int aMaxTagID, int &tagID, double &xCam, double &
     for the camera and distCoeffs.
     */
     cout << mCamParam << endl;
-    
+
     bool readOk = readCameraParameters(mCamParam, camMatrix, distCoeffs);
     if(!readOk) {
         cerr << "Invalid camera file" << endl;
@@ -111,7 +111,7 @@ bool computervision::detectTag(int aMaxTagID, int &tagID, double &xCam, double &
     cout << "Video opening" << endl;
     inputVideo.open(0);
     int waitTime = 10;
-    
+
     clock_t flagT = clock();
 
     while(inputVideo.grab() && !flagCV && ((clock()-flagT)/(double) CLOCKS_PER_SEC)<TIME_DELAY) {

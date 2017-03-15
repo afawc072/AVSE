@@ -84,6 +84,8 @@ class Grid
   	// Display the current grid
 	void printGrid();
 
+ 	// Display the current grid in specified file
+	void printGrid(FILE * aFile);
 
     private:
 

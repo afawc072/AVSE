@@ -243,7 +243,6 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
          QGtoT[1][0] =-1;
          QGtoT[0][2] =-1;
 	 cameraOrientation = aCamMarkerAngle - angleToRobot - 90;
-
       break;
 
       default:
@@ -453,6 +452,23 @@ void NavigationModel::print()
    printf("-----------------------------------------------------\n");
 }
 
+/*******************************************************************************
+ * print
+ *
+ *      Prints the destination selected as well as the current grid and the current
+ * robot position and orientation. For debugging purposes.
+ *
+ *
+ *******************************************************************************/
+void NavigationModel::print(FILE * aFile)
+{
+   fprintf(aFile,"-------------------NavigationModel-------------------\n");
+   fprintf(aFile,"The destination is set to cell (%i, %i)\n",mFinalPosition.row,mFinalPosition.column);
+   mrGrid->printGrid(aFile);
+   mRobot.print(aFile);
+   fprintf(aFile,"-----------------------------------------------------\n");
+   fflush(aFile);
+}
 
 
 

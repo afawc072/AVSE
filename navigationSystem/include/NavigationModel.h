@@ -78,6 +78,9 @@ class NavigationModel{
       // Prints the object current state
       void print();
 
+      // Prints the object current state in the log file specified
+      void print(FILE * aFile);
+
 
     private:
 

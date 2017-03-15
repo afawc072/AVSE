@@ -49,6 +49,9 @@ using namespace std;
  *******************************************************************************/
 static bool tagDetection(Protocol *apProtocol, int aMaxTagID, int &arTagID, double &arxCam, double &arzCam, double &arAngleCamMarker, double &arCamServoAngle)
 {
+   fprintf(file, "Tag Dectection Process Initiated\n");
+   fflush(file);
+
    // Initialize required variable/objects
    errorType error;
    computervision compVision(CAM_PARAM);
@@ -59,6 +62,8 @@ static bool tagDetection(Protocol *apProtocol, int aMaxTagID, int &arTagID, doub
    // Loop until either a Tag is found or the camera has done a full sweep
    while( !foundTag && arCamServoAngle <= CAMANGLE_END )
    {
+      fprintf(file,"Camera Angle set to: %.02f\n",arCamServoAngle);  
+      fflush(file);
       // Send CAMANGLE message to Arduino to set the camera angle
       if( apProtocol->send(CAMANGLE, to_string(arCamServoAngle), error) )
       {
@@ -80,20 +85,29 @@ static bool tagDetection(Protocol *apProtocol, int aMaxTagID, int &arTagID, doub
             else // cmdRcvd != END
             {
                cout << "ERROR : Message received was not END" << endl;
+               fprintf(file, "ERROR : Message received was not END\n");
+	       fflush(file);
             }
          }
          else // Error in receiving the message back from Arduino
          {
             cout << PROTOCOL_ERR[error] << endl;
+	    fprintf(file,"Error Receiving the message back fomr the Arduino: %s\n", PROTOCOL_ERR[error].c_str());
+	    fflush(file);
          }
       }
       else // Error in sending the position vector
       {
          cout << PROTOCOL_ERR[error] <<endl;
+	 fprintf(file,"Error Sending Position Vector: %s\n", PROTOCOL_ERR[error].c_str());
+         fflush(file);
       }
    }
 
    // Return the flag indicating that a tag was found or not
+   fprintf(file, "Tag Detection Process Terminated\n");
+   fflush(file);
+
    return foundTag;
 }
 
@@ -113,6 +127,10 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
 {
    errorType error;
    vector<float> firstPosition;
+   command cmdRcvd;
+   string infoRcvd;
+   fprintf(file, "moveRobot Function Initiated\n");
+   fflush(file);
 
    // Send the first position vector to the Arduino
    if( apModel->nextPositionVector(&firstPosition) )
@@ -122,10 +140,14 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
       infoNext += to_string(firstPosition[1]);
 
       cout << "Sending position vector: " << infoNext <<endl;
+      fprintf(file,"Sending position vector: %s\n", infoNext.c_str());
+      fflush(file);
 
       if( !apProtocol->send(NEXT, infoNext, error) )
       {
 	 cout << PROTOCOL_ERR[error] << endl;
+	 fprintf(file,"Protocol Error: %s\n", PROTOCOL_ERR[error].c_str());
+         fflush(file);
       }
 
    }
@@ -134,67 +156,134 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
    // Loop until destination is reached
    while( !apModel->destinationIsReached() )
    {
-      command cmdRcvd;
-      string infoRcvd;
 
       // Receive feedback from Arduino
       if( apProtocol->receive(NB_TRIES_NEXT, DELAY_NEXT, cmdRcvd, infoRcvd, error) )
       {
 
+	 // Position was reached without problem, send position vector right away
          if( cmdRcvd == REACHED )
          {
-	    // Extract obstacle distances from infoRcvd
-            vector<float> obstDistances;
-	    stringstream ss(infoRcvd);
+            // Send next position vector right away
+            vector<float> nextPosition;
 
-	    while(ss)
-	    {
-	      string temp;
-	      if( !getline(ss, temp, ',') ) break;
-	      obstDistances.push_back(stof(temp));
-	    }
+            // If there is a position vector, it is sent to the Arduino
+            if( apModel->nextPositionVector(&nextPosition) )
+            {
+               string infoNext = to_string(nextPosition[0]);
+               infoNext += ",";
+               infoNext += to_string(nextPosition[1]);
+
+               cout << "Sending position vector: " << infoNext <<endl;
+               fprintf(file, "Sending position vector: %s\n", infoNext.c_str());
+               fflush(file);
+               // Send the next position vector to the Arduino
+               if( !apProtocol->send(NEXT, infoNext, error) )
+               {
+                  cout << PROTOCOL_ERR[error] << endl;
+                  fprintf(file,"Protocol Error: %s\n", PROTOCOL_ERR[error].c_str());
+                  fflush(file);
+
+               }
+            }
+
+            // Extract obstacle distances from infoRcvd
+            vector<float> obstDistances;
+            stringstream ss(infoRcvd);
+            fprintf(file,"Distance Received: %s\n",infoRcvd.c_str());
+            fflush(file);
+
+            while(ss)
+            {
+              string temp;
+              if( !getline(ss, temp, ',') ) break;
+              obstDistances.push_back(stof(temp));
+            }
 
 	    // Add obstacle
 	    apModel->addObstacle(obstDistances);
 
-	    // Send next position vector
-	    vector<float> nextPosition;
+        }
+ 
+        // An obstacle was detected too close, analyze data before sending next vector
+        else if( cmdRcvd == STOP )
+        {
+	   fprintf(file, "Received STOP command from Arduino (a sensor deteced an obstacle too close). Distances received: %s\n",infoRcvd.c_str());
+           fflush(file);
 
-	    // If there is a position vector, it is sent to the Arduino
-	    if( apModel->nextPositionVector(&nextPosition) )
-	    {
-	       string infoNext = to_string(nextPosition[0]);
-	       infoNext += ",";
-	       infoNext += to_string(nextPosition[1]);
+           // Extract obstacle distances from infoRcvd
+           vector<float> obstDistances;
+           stringstream ss(infoRcvd);
+           fprintf(file,"Distance Received: %s\n",infoRcvd.c_str());
+           fflush(file);
 
-	       cout << "Sending position vector: " << infoNext <<endl;
-	       // Send the next position vector to the Arduino
-	       if( !apProtocol->send(NEXT, infoNext, error) )
-	       {
-         	  cout << PROTOCOL_ERR[error] << endl;
-               }
-	    }
-         }
+           while(ss)
+           {
+             string temp;
+             if( !getline(ss, temp, ',') ) break;
+             obstDistances.push_back(stof(temp));
+           }
 
- 	 else if( cmdRcvd == STOP )
-	 {
-	    // TO-DO
-            apModel->clearPath();
-            break;
-	 }
+           // Add obstacle
+           apModel->addObstacle(obstDistances);
 
-	 // Unknown command
-         else
-         {
-            cout << "ERROR: Command received is : " << PROTOCOL_DICT[cmdRcvd] <<endl;
-         }
+           // Send next position vector right away
+           vector<float> nextPosition;
+
+           // If there is a position vector, it is sent to the Arduino
+           if( apModel->nextPositionVector(&nextPosition) )
+           {
+              string infoNext = to_string(nextPosition[0]);
+              infoNext += ",";
+              infoNext += to_string(nextPosition[1]);
+
+              cout << "Sending position vector: " << infoNext <<endl;
+              fprintf(file, "Sending position vector: %s\n", infoNext.c_str());
+              fflush(file);
+              // Send the next position vector to the Arduino
+              if( !apProtocol->send(NEXT, infoNext, error) )
+              {
+                 cout << PROTOCOL_ERR[error] << endl;
+                 fprintf(file,"Protocol Error: %s\n", PROTOCOL_ERR[error].c_str());
+                 fflush(file);
+              }
+           }
+        }
+
+	// Error on the Arduino side
+        else if( cmdRcvd == ERROR )
+        {
+           fprintf(file, "Received error command from Arduino with data: %s\n",infoRcvd.c_str());
+	   fflush(file);
+	}
+
+        // Unknown command
+        else
+        {
+           cout << "ERROR: Command received is : " << PROTOCOL_DICT[cmdRcvd] <<endl;
+	   fprintf(file, "ERROR: Command received was : %s\n",PROTOCOL_DICT[cmdRcvd].c_str());
+	   fflush(file);
+        }
       }
 
-      else
+      else // Error in protocol receive function
       {
 	 cout << PROTOCOL_ERR[error] << endl;
+         fprintf(file,"Protocol Error: %s\n", PROTOCOL_ERR[error].c_str());
+         fflush(file);
       }
    }
+
+    if( apProtocol->receive(NB_TRIES_NEXT, DELAY_NEXT, cmdRcvd, infoRcvd, error) )
+    {
+       if( cmdRcvd != REACHED )
+       {
+         cout << "Error when receiving final REACHED message. The message received was: [" <<PROTOCOL_DICT[cmdRcvd]<<":"<<infoRcvd<<"]"<<endl; 
+         fprintf(file, "Received error command from Arduino with data: [%s:%s]\n",PROTOCOL_DICT[cmdRcvd].c_str(),infoRcvd.c_str());
+         fflush(file);
+       }
+    }
+
 }
 
 
@@ -224,14 +313,14 @@ int main(int argc, const char **argv)
 {
    errorType error;
 
-   FILE *file = logfile();
-   cout << "file opened";
-   fprintf(file, "%s", "test \n");
+   file = logfile();
+   fprintf(file,"!!INITIATION!!\n");
    fflush(file);
+   
    //Setup Grid
    Grid myGrid(GRID_FILE_PATH);
-   
-   myGrid.printGrid();
+   myGrid.printGrid();   
+   myGrid.printGrid(file);
 
    // Initialize Navigation object
    NavigationModel model = NavigationModel(&myGrid);
@@ -272,6 +361,8 @@ int main(int argc, const char **argv)
          if( tagDetection(&protocol, maxTagID, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
          {
 	    cout << "Tag " << tagID << ", xTag: "<< xTag << ", zTag: "<< zTag << ", angle " <<angleCamMarker << ",camangle " << camServoAngle<<endl;
+	    fprintf(file, "Tag %d, xTag: %.02f, zTag; %.02f, angle: %.02f, camangle: %.02f\n",tagID,xTag,zTag,angleCamMarker,camServoAngle);
+   	    fflush(file);
             // 2.2 ROBOT-GRID RELATION
 
             // Initialize the robot
@@ -281,8 +372,8 @@ int main(int argc, const char **argv)
                // 3. FIND POTENTIAL PATH TO DESTINATION
                if( model.calculatePathToDest() )
 	       {
-                  model.print();
-
+                  model.print(file);
+	          model.print();
                   // 4. MOVE TOWARD GOAL
 	          moveRobot(&model, &protocol);
 
@@ -296,11 +387,15 @@ int main(int argc, const char **argv)
                         if( !model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle) )
 			{
 			   cout << "Unable to localize robot to apply a correction. Robot should be close to destination"<<endl;
+                           fprintf(file,"Unable to localize robot to apply a correction. Robot should be close to destination\n");
+                           fflush(file);
 			}
                      }
 	             else
 	             {
 	   	        cout << "Didn't find a tag at final destination, no correction can be applied" << endl;
+                        fprintf(file,"Didn't find a tag at final destination, no correction can be applied\n");
+                        fflush(file);
 	             }
 
 	             /// If the updated position after detecting a tag does not match
@@ -308,21 +403,30 @@ int main(int argc, const char **argv)
                      if( !model.destinationIsReached() )
                      {
 	                cout << "CORRECTION APPLIED" << endl;
+                        fprintf(file,"CORRECTION APPLIED\n");
+                        fflush(file);
 
 			if( model.calculatePathToDest() )
 		        {
+                           model.print(file);
+	                   model.print();
                            moveRobot(&model, &protocol);
                      	}
 			else
 			{
 			   cout << "Unable to calculate path to apply a correction. Robot should be close to destination"<<endl;
+                           fprintf(file, "Unable to calculate path to apply a correction. Robot should be close to destination\n");
+                           fflush(file);
 			}
 		     }
 
-                     printf("FINAL\n");				// WRITE TO LCD
-
-                     model.print();
+                     fprintf(file,"FINAL\n");				// WRITE TO LCD
+	             fflush(file);
                      cout << "Now resetting the grid" <<endl;
+	             fprintf(file, "Now Resetting the Grid");
+		     fflush(file);
+		     model.print(file);
+		     model.print();
 	             myGrid.resetGrid();
                   }
 	          else
@@ -333,16 +437,22 @@ int main(int argc, const char **argv)
 	       else // Calculation of the path failed
 	       {
 		  cout << "Unable to calculate the path. Try another destination"<<endl;
+	 	  fprintf(file,"Unable to calculate the path. Try another destination\n");
+		  fflush(file);
 	       }
 	   }
 	   else // Localization of the robot failed
 	   {
 		cout <<"Unable to locate robot. Try to move it closer to a marker"<<endl;
+	 	fprintf(file, "Unable to locate robot. Try to move it closer to a marker\n");
+		fflush(file);
 	   }
 	 }
 	 else // no tag were found
          {
-            cout << "NOTAG" <<endl; 			// WRITE TO LCD
+            cout << "NOTAG" <<endl;
+	    fprintf(file,"NOTAG\n");
+	    fflush(file); 			// WRITE TO LCD
          }
       }
    }

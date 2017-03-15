@@ -30,11 +30,12 @@
 #include <cstring> // for strncpy
 #include <sstream> //ostringstream
 #include <vector>
+#include <time.h>
 
 // IMPORTANT SETTINGS
 static const int NB_BYTES = 34;//Defined Buffer Size
 
-static const int SLEEP_S = 1;//Short Sleep(ms);
+static const int SLEEP_S = 0.75;//Short Sleep(ms);
 static const int SLEEP_M = 1.5;//Medium Sleep(ms);
 static const int SLEEP_L = 2;//Long Sleep(ms);
 

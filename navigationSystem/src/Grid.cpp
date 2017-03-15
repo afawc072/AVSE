@@ -285,6 +285,30 @@ void Grid::printGrid()
 
 
 /*******************************************************************************
+ * printGrid
+ *
+ *  Prints the content of the Grid (for testing purposes)
+ *
+ *
+ *******************************************************************************/
+void Grid::printGrid(FILE * aFile)
+{
+   fprintf(aFile,"\n----------------------GRID-------------------------\n");
+   for(unsigned int rows=0; rows<NUM_ROW; rows++)
+   {
+      for(unsigned int cols=0; cols<NUM_COL; cols++)
+      {
+          fprintf(aFile,"%c ",cstate_names[mGrid[rows][cols]]);
+      }
+      fprintf(aFile,"\n");
+   }
+   fprintf(aFile,"------------------------------------------------------\n");
+   fflush(aFile);
+}
+
+
+
+/*******************************************************************************
  * readGridFromFile
  *
  *  Reads the file specified to build the Grid stored in the object.

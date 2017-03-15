@@ -94,6 +94,20 @@ void Robot::print()
 
 
 
+/*******************************************************************************
+ * print
+ *
+ *    Prints the current position and orienation of the robot
+ *
+ *******************************************************************************/
+void Robot::print(FILE * aFile)
+{
+   fprintf(aFile,"---------------------Robot-----------------\n");
+   fprintf(aFile,"Position: (%i, %i) \n", mCurrentPosition.row, mCurrentPosition.column);
+   fprintf(aFile,"Orientation: %f\n", mOrientation);
+   fflush(aFile);
+}
+
 
 
 node::node(int xp, int yp, int aLevel, int aPriority)

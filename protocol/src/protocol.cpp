@@ -70,11 +70,11 @@ bool Protocol::testConnection(errorType &apE)
   if(writeP(cmd,nUll,apE))
   {
     //Sleep Function to ensure proper synchronization?!?
-    sleep(SLEEP_S);
+    //sleep(SLEEP_S);
     cout << "WRITEP OK" << endl;
     if(readP(rcv,nUll,apE))
     {
-      sleep(SLEEP_S);
+      //sleep(SLEEP_S);
       //The connection test shoudl return LISTEN by the ARDUINO.
       cout << "READP OK" << endl;
       if(rcv==LISTEN)
@@ -104,13 +104,13 @@ bool Protocol::send(command aCommand, string aInfoW, errorType &apE )
   In the following logic, we test connection,
   then write to the arduino what we need.
   */
-  if(testConnection(apE))
-  {
+//  if(testConnection(apE))
+//  {
     if(writeP(aCommand, aInfoW, apE))
     {
       flagS=true;
     }
-  }
+//  }
 	return flagS;
 }
 
@@ -132,7 +132,7 @@ bool Protocol::receive(int aNumAttempts, int aDelay, command& apCommand, string 
        flagR=true;
      }
      counter++;
-     sleep(aDelay);
+     usleep(aDelay);
   }
   return flagR;
 }
@@ -196,7 +196,7 @@ bool Protocol::writeP(command aCommand, string aInfoW, errorType &apE)
   i++;
   bufw[i]=HEADER_END;
   cout << "BUFW " << bufw << endl;
-  sleep(SLEEP_S);
+  //sleep(SLEEP_S);
   int w=write(fd, bufw, NB_BYTES);
   //ERROR RETURN
   if(w!=-1)
@@ -238,7 +238,7 @@ bool Protocol::readP(command &apCommand, string &apInfoR, errorType &apE)
   string cmd;
   string info;
 //troubleshoot
-  sleep(SLEEP_S);
+  //sleep(SLEEP_S);
   ret=read(fd,bufr,NB_BYTES);
   cout <<"BUFR " << bufr << endl;
   

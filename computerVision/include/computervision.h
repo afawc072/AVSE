@@ -33,7 +33,7 @@ using namespace cv;
 //static const int SLEEP_M = 1.5;//Medium Sleep(ms);
 //static const int SLEEP_L = 2;//Long Sleep(ms);
 
-static const int TIME_DELAY = 10;
+static const int TIME_DELAY = 1;
 
 static const aruco::PREDEFINED_DICTIONARY_NAME DICT_ID = aruco::DICT_ARUCO_ORIGINAL;
 static const float MARKER_LENGTH = 0.1;
