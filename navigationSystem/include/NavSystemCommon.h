@@ -48,6 +48,10 @@ static const int GRID_CM = 10;
 static const int NUM_COL = 50;
 static const int NUM_ROW = 25;
 
+static const int ROBOT_RADIUS = 15;
+static const int ANGLE_BETWEEN_SENSORS = 30;
+static const int NUM_SENSORS = 5;
+
 static const int dir = 8; //Number of possibles directions for the robot (4 or 8)
 
 

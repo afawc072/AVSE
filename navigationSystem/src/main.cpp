@@ -4,7 +4,7 @@
 *
 * SECTION: Navigation System
 *
-* AUTHOR: Jean-Sebastien Fiset
+* AUTHOR: Alexandre Fawcett & Jean-Sebastien Fiset
 *
 * DESCRIPTION:
 *
@@ -43,19 +43,28 @@ static void moveRobot(NavigationModel * model)
 
       if(feedback == "ADD")
       {
-         float x,y;
+         float a,b,c,d,e;
 
          vector<float> obst_distances;
 
          //Input the information regarding the new obstacle
-         cin >> x >> y;
-         obst_distances.push_back(x);
-         obst_distances.push_back(y);
+         cin >> a >> b >> c >> d >> e;
+         obst_distances.push_back(a);
+         obst_distances.push_back(b);
+         obst_distances.push_back(c);
+         obst_distances.push_back(d);
+         obst_distances.push_back(e);
+         model->print();
+
+         model->moveRobotToNextPosition();
 
          model->addObstacle(obst_distances);
+         model->print();
       }
       else if(feedback == "R")
       {
+          model->moveRobotToNextPosition();
+
           if(model->nextPositionVector(&nextPosition))
           {
              printf("NEXT (%.2f, %.2f)\n",nextPosition[0],nextPosition[1]);	//WRITE TO ARD
@@ -79,7 +88,7 @@ int main(int argc, const char **argv)
 {
 
    //Setup Grid
-   Grid myGrid("Grid.txt");
+   Grid myGrid("Grid25x5.txt");
    myGrid.printGrid();
 
    // Initialize Navigation object

@@ -4,7 +4,7 @@
 *
 * SECTION: Navigation System
 *
-* AUTHOR: Jean-Sebastien Fiset
+* AUTHOR: Alexandre Fawcett & Jean-Sebastien Fiset 
 *
 * DESCRIPTION:
 *
@@ -160,6 +160,7 @@ void NavigationModel::updateRobotPosition(int aNewRow, int aNewCol)
 
 
 
+
 /*******************************************************************************
  * localizeRobotInGrid
  *
@@ -249,6 +250,11 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
 	// Do nothing
       break;
    }
+ 
+   // Calculate and set the robot's orientation in respect to the grid
+   double robotOrientation = -(cameraOrientation - aCamServoAngle);
+   updateRobotOrientation(robotOrientation);
+   cout << "Camera orientation is " << cameraOrientation << endl;
 
    // Calculate the robot position
    int robotRow = round((QGtoT[0][0]*aXdist_cm + QGtoT[0][2]*aZdist_cm+QGtoT[0][3])/GRID_CM);
@@ -260,16 +266,41 @@ bool NavigationModel::localizeRobotInGrid(int aTagID, double aXdist_cm, double a
    {
       validLocalization = true;
       updateRobotPosition(robotRow, robotCol);
-
-      cout << "Camera orientation is " << cameraOrientation << endl;
-
-      // Calculate and set the robot's orientation in respect to the grid
-      double robotOrientation = -(cameraOrientation - aCamServoAngle);
-
-      updateRobotOrientation(robotOrientation);
    }
 
    return validLocalization;
+}
+
+
+
+/*******************************************************************************
+ * moveRobotToNextPosition
+ *
+ *      Changes the robot position to the next cell and remove the path cell from
+ * the grid and the stack.
+ *
+ *
+ *******************************************************************************/
+bool NavigationModel::moveRobotToNextPosition()
+{
+   bool validUpdate = false;
+
+   if( !mPathToDest.empty() )
+   {
+      validUpdate = true;
+
+      // Update position and orientation of the robot
+      Position newPos = mPathToDest.top();
+      updateRobotOrientation(atan2((newPos.row - mRobot.mCurrentPosition.row),
+				   (newPos.column - mRobot.mCurrentPosition.column))*180/PI);
+      updateRobotPosition(newPos.row, newPos.column);
+
+      // Remove path cell from grid and from stack
+      mrGrid->removePathCell(newPos);
+      mPathToDest.pop();
+
+   }
+   return validUpdate;
 }
 
 
@@ -292,11 +323,10 @@ bool NavigationModel::nextPosition(Position *apPos)
    if( !mPathToDest.empty() )
    {
       knownNextPos = true;
-      printf("nextPos is %i, %i\n",mPathToDest.top().row, mPathToDest.top().column);
+//      printf("nextPos is %i, %i\n",mPathToDest.top().row, mPathToDest.top().column);
+
       apPos->row = mPathToDest.top().row;
       apPos->column = mPathToDest.top().column;
-      mrGrid->removePathCell(*apPos);
-      mPathToDest.pop();
    }
    else
    {
@@ -348,8 +378,8 @@ bool NavigationModel::nextPositionVector(vector<float> *apNextPosVec)
       apNextPosVec->push_back(tempVec[1]*GRID_CM);
 
       // Set the robot's new position and orientation
-      updateRobotOrientation(atan2(posVecGrid[0], posVecGrid[1])*180/PI);
-      updateRobotPosition(nextPos.row, nextPos.column);
+ //     updateRobotOrientation(atan2(posVecGrid[0], posVecGrid[1])*180/PI);
+ //     updateRobotPosition(nextPos.row, nextPos.column);
 
       knownNextPosVector = true;
    }
@@ -407,29 +437,84 @@ bool NavigationModel::calculatePathToDest()
  *******************************************************************************/
 bool NavigationModel::addObstacle(vector<float> aSensorDistances)
 {
-   vector<Position> newObstacles;
-
-   // Caculation of obstacle cells not yet implemented
-   newObstacles.push_back(Position(aSensorDistances[0],aSensorDistances[1])); // TEMPORARY, FOR TESTING PURPOSES
-
-
+   bool pathOK = true;
    bool recalculatePath = false;
 
-   for( unsigned int i = 0; i < newObstacles.size(); i++ )
+   // Vector of obstacles to add
+   vector<Position> newObstacles;
+
+   // Initialize vector to model the 8 possibile direction (right, left, down, up and 4 diagonals)
+   vector<int> row8dir={0, 0, 1,-1, 1, 1,-1,-1};
+   vector<int> col8dir={1,-1, 0, 0, 1,-1, 1,-1};
+
+   double angleFromX = ANGLE_BETWEEN_SENSORS*NUM_SENSORS;
+
+   // Loop through the 5 sensors
+   for( unsigned int sensorID = 0 ; sensorID < aSensorDistances.size() ; sensorID++, angleFromX-=ANGLE_BETWEEN_SENSORS)
    {
-      if( !(mrGrid->addObstacle(newObstacles[i])) )
+      cout << aSensorDistances[sensorID] << " angle is " << angleFromX <<endl;
+      // An obstacle was detected too close to the robot
+      if( aSensorDistances[sensorID] == -1 )
       {
-	       clearPath();
-	       recalculatePath = true;
+
+
+      }
+
+      // An obstacle was detected in the "observable zone"
+      else if ( aSensorDistances[sensorID] > 0 )
+      {
+         vector<float> obstRframe;
+         obstRframe.push_back((ROBOT_RADIUS + aSensorDistances[sensorID])*cos(angleFromX*PI/180));  // X in respect to robot frame
+         obstRframe.push_back((ROBOT_RADIUS + aSensorDistances[sensorID])*sin(angleFromX*PI/180));  // Y in respect to robot frame
+
+         cout << "obst in R frame " << obstRframe[0] <<","<<obstRframe[1] <<endl;
+
+         // Transformation to obtain vector in respect ot grid
+         vector<float> obstGframe = transMatRtoG(obstRframe);
+
+         Position obstaclePos;
+         obstaclePos.row = round(obstGframe[0]/GRID_CM);
+         obstaclePos.column = round(obstGframe[1]/GRID_CM);
+
+
+         cout << "obst in G frame " << obstGframe[0] <<","<<obstGframe[1] <<endl;
+
+
+         cout << "Obst at : " <<obstaclePos.row <<","<<obstaclePos.column <<endl;
+
+         // Add obstacle in grid
+         if( !(mrGrid->addObstacle(obstaclePos)) )
+         {
+            recalculatePath = true;
+         }
+
+
+         // Add bufferzone around obstacle
+         for( unsigned int i = 0 ; i < row8dir.size() ; i++ )
+         {
+            cout << "Obst at : " <<obstaclePos.row+row8dir[i] <<","<<obstaclePos.column+col8dir[i] <<endl;
+            if( !(mrGrid->addObstacle(Position(obstaclePos.row+row8dir[i], obstaclePos.column+col8dir[i]))) )
+            {
+               recalculatePath = true;
+            }
+         }
+      }
+      else // aSensorDistances[sensorID] == 0
+      {
+	  // Ignore, no obstacte were detected
       }
    }
 
+
+   // If the recalculatePath was set to true, the path is recalculated
    if( recalculatePath )
    {
-      calculatePathToDest();
+      cout << "Recalculating path ... " <<endl;
+      clearPath();
+      pathOK = calculatePathToDest();
    }
 
-   return true;
+   return pathOK;
 }
 
 
@@ -479,7 +564,7 @@ void NavigationModel::print(FILE * aFile)
  * taking into account the position. We can send a vector in respect to the grid
  * and the function will return the vector coordinates in respect to the robot.
  *
- * @param  [out]  aVectorGrid
+ * @param  [in]  aVectorGrid
  *
  * @return vecRobot
  *
@@ -499,6 +584,29 @@ vector<float> NavigationModel::transMatGtoR(vector<float> aVectorGrid)
 
 
 
+
+/*******************************************************************************
+ * transMatRtoG
+ *
+ *      Implementation of a 2D transformation from the grid to the robot with
+ * the consideration of the translation of the robot.
+ *
+ * @param  [in]  aVectorRobot
+ *
+ * @return vecGrid
+ *
+ *******************************************************************************/
+vector<float> NavigationModel::transMatRtoG(vector<float> aVectorRobot)
+{
+   vector<float> vecGrid;
+
+   double aThetaRad = mRobot.mOrientation*PI/180;
+
+   vecGrid.push_back(aVectorRobot[0]*cos(aThetaRad) + aVectorRobot[1]*sin(aThetaRad) + mRobot.mCurrentPosition.row*GRID_CM);
+   vecGrid.push_back(-aVectorRobot[0]*sin(aThetaRad) + aVectorRobot[1]*cos(aThetaRad) + mRobot.mCurrentPosition.column*GRID_CM);
+
+   return vecGrid;
+}
 
 /*******************************************************************************
  * aStarAlgorithm

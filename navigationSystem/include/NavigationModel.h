@@ -62,6 +62,8 @@ class NavigationModel{
       // Knowing the tagID and x,z distance from this tag to the robot, we localize the robot in the grid
       bool localizeRobotInGrid(int aTagID, double aXdist_cm, double aZdist_cm, double aCamMarkerAngle, double aCamServoAngle);
 
+      // Moves the robot to the next position (update position and orientation) and remove path cell
+      bool moveRobotToNextPosition();
 
       // Fills the position pointer with the next position in the path
       bool nextPosition(Position *apPos);
@@ -103,6 +105,10 @@ class NavigationModel{
       // Private function that transform a position vector in respect to the grid to
       // a position vector in respect to the robot
       vector<float> transMatGtoR(vector<float> aVectorGrid);
+
+      // Private function that transform a position vector in respect to the robot to
+      // a position vector in respect to the grid
+      vector<float> transMatRtoG(vector<float> aVectorRobot);
 
       // Implementation of the A* algorithm
       bool aStarAlgorithm();

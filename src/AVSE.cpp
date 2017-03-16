@@ -64,6 +64,7 @@ static bool tagDetection(Protocol *apProtocol, int aMaxTagID, int &arTagID, doub
    {
       fprintf(file,"Camera Angle set to: %.02f\n",arCamServoAngle);  
       fflush(file);
+
       // Send CAMANGLE message to Arduino to set the camera angle
       if( apProtocol->send(CAMANGLE, to_string(arCamServoAngle), error) )
       {
@@ -129,6 +130,8 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
    vector<float> firstPosition;
    command cmdRcvd;
    string infoRcvd;
+   bool possiblePathFlag = true;
+
    fprintf(file, "moveRobot Function Initiated\n");
    fflush(file);
 
@@ -154,7 +157,7 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
 
 
    // Loop until destination is reached
-   while( !apModel->destinationIsReached() )
+   while( !apModel->destinationIsReached() && possiblePathFlag)
    {
 
       // Receive feedback from Arduino
@@ -164,6 +167,9 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
 	 // Position was reached without problem, send position vector right away
          if( cmdRcvd == REACHED )
          {
+            // Update robot position in the grid
+            apModel->moveRobotToNextPosition();
+
             // Send next position vector right away
             vector<float> nextPosition;
 
@@ -177,6 +183,7 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
                cout << "Sending position vector: " << infoNext <<endl;
                fprintf(file, "Sending position vector: %s\n", infoNext.c_str());
                fflush(file);
+
                // Send the next position vector to the Arduino
                if( !apProtocol->send(NEXT, infoNext, error) )
                {
@@ -201,10 +208,13 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
             }
 
 	    // Add obstacle
-	    apModel->addObstacle(obstDistances);
+	    if( !apModel->addObstacle(obstDistances) )
+            {
+               possiblePathFlag = false;
+            }
 
         }
- 
+
         // An obstacle was detected too close, analyze data before sending next vector
         else if( cmdRcvd == STOP )
         {
@@ -273,16 +283,24 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
          fflush(file);
       }
    }
-
-    if( apProtocol->receive(NB_TRIES_NEXT, DELAY_NEXT, cmdRcvd, infoRcvd, error) )
-    {
-       if( cmdRcvd != REACHED )
-       {
-         cout << "Error when receiving final REACHED message. The message received was: [" <<PROTOCOL_DICT[cmdRcvd]<<":"<<infoRcvd<<"]"<<endl; 
-         fprintf(file, "Received error command from Arduino with data: [%s:%s]\n",PROTOCOL_DICT[cmdRcvd].c_str(),infoRcvd.c_str());
+   if( possiblePathFlag )
+   {
+      if( apProtocol->receive(NB_TRIES_NEXT, DELAY_NEXT, cmdRcvd, infoRcvd, error) )
+      {
+         if( cmdRcvd != REACHED )
+         {
+           cout << "Error when receiving final REACHED message. The message received was: [" <<PROTOCOL_DICT[cmdRcvd]<<":"<<infoRcvd<<"]"<<endl; 
+           fprintf(file, "Received error command from Arduino with data: [%s:%s]\n",PROTOCOL_DICT[cmdRcvd].c_str(),infoRcvd.c_str());
+           fflush(file);
+         }
+      }
+      else
+      {
+         cout << "Error in receive function for the final REACHED message" <<endl;
+         fprintf(file, "Error in receive function for the final REACHED message\n");
          fflush(file);
-       }
-    }
+      }
+   }
 
 }
 
