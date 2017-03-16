@@ -31,7 +31,7 @@ static void moveRobot(NavigationModel * model)
       printf("NEXT (%.2f, %.2f)\n",firstPosition[0],firstPosition[1]);		// WRITE TO ARD
    }
 
-   cout << "Moving the robot, type R if cell is reached, type ADD followed by (on the next line) <rowIndex> <colIndex> to add an obstacle or STOP" <<endl;
+   cout << "Moving the robot, type R if cell is reached, type ADD followed by (on the next line) <sensor0 distance> <sensor1 distance>  ... <sensor4 distance> to add an obstacle or STOP" <<endl;
 
    while(!model->destinationIsReached())
    {

@@ -124,10 +124,12 @@ static bool tagDetection(Protocol *apProtocol, int aMaxTagID, int &arTagID, doub
  *
  *
  *******************************************************************************/
-static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
+static bool moveRobot(NavigationModel * apModel, Protocol * apProtocol)
 {
+   // Variable declaration
    errorType error;
    vector<float> firstPosition;
+
    command cmdRcvd;
    string infoRcvd;
    bool possiblePathFlag = true;
@@ -190,7 +192,6 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
                   cout << PROTOCOL_ERR[error] << endl;
                   fprintf(file,"Protocol Error: %s\n", PROTOCOL_ERR[error].c_str());
                   fflush(file);
-
                }
             }
 
@@ -212,9 +213,11 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
             {
                possiblePathFlag = false;
             }
-
+	    apModel->print();
+	    apModel->print(file);
         }
 
+/*OBSOLETE ?*/
         // An obstacle was detected too close, analyze data before sending next vector
         else if( cmdRcvd == STOP )
         {
@@ -234,7 +237,8 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
              obstDistances.push_back(stof(temp));
            }
 
-           // Add obstacle
+           // Move robot and Add obstacle
+           apModel->moveRobotToNextPosition();
            apModel->addObstacle(obstDistances);
 
            // Send next position vector right away
@@ -265,6 +269,7 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
         {
            fprintf(file, "Received error command from Arduino with data: %s\n",infoRcvd.c_str());
 	   fflush(file);
+	   break;
 	}
 
         // Unknown command
@@ -273,6 +278,7 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
            cout << "ERROR: Command received is : " << PROTOCOL_DICT[cmdRcvd] <<endl;
 	   fprintf(file, "ERROR: Command received was : %s\n",PROTOCOL_DICT[cmdRcvd].c_str());
 	   fflush(file);
+	   break;
         }
       }
 
@@ -281,8 +287,11 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
 	 cout << PROTOCOL_ERR[error] << endl;
          fprintf(file,"Protocol Error: %s\n", PROTOCOL_ERR[error].c_str());
          fflush(file);
+	 break;
       }
    }
+
+   // If we sent out the final position vector without problem, we wait for the final REACHED message (ignoring data from the sensors)
    if( possiblePathFlag )
    {
       if( apProtocol->receive(NB_TRIES_NEXT, DELAY_NEXT, cmdRcvd, infoRcvd, error) )
@@ -301,7 +310,7 @@ static void moveRobot(NavigationModel * apModel, Protocol * apProtocol)
          fflush(file);
       }
    }
-
+   return possiblePathFlag;
 }
 
 
@@ -393,66 +402,73 @@ int main(int argc, const char **argv)
                   model.print(file);
 	          model.print();
                   // 4. MOVE TOWARD GOAL
-	          moveRobot(&model, &protocol);
-
-	          // 5. CHECK IS DESTINATION WAS REACHED
-                  if( model.destinationIsReached() )
-                  {
-
-                     // Call openCV function to detect a tag and localize the robot in the grid
-	             if( tagDetection(&protocol, maxTagID, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
-    	             {
-                        if( !model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle) )
-			{
-			   cout << "Unable to localize robot to apply a correction. Robot should be close to destination"<<endl;
-                           fprintf(file,"Unable to localize robot to apply a correction. Robot should be close to destination\n");
+	          if( moveRobot(&model, &protocol) ) // Return false if obstacles blocked all the possible path to destination
+		  {
+	             // 5. CHECK IS DESTINATION WAS REACHED
+                     if( model.destinationIsReached() )
+                     {
+                        // Call openCV function to detect a tag and localize the robot in the grid
+	                if( tagDetection(&protocol, maxTagID, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
+    	                {
+                           if( !model.localizeRobotInGrid(tagID, xTag, zTag, angleCamMarker, camServoAngle) )
+			   {
+			      cout << "Unable to localize robot to apply a correction. Robot should be close to destination"<<endl;
+                              fprintf(file,"Unable to localize robot to apply a correction. Robot should be close to destination\n");
+                              fflush(file);
+			   }
+                        }
+	                else
+	                {
+	   	          cout << "Didn't find a tag at final destination, no correction can be applied" << endl;
+                           fprintf(file,"Didn't find a tag at final destination, no correction can be applied\n");
                            fflush(file);
-			}
+	                }
+
+	                /// If the updated position after detecting a tag does not match
+	                //   the final destination, a correction is applied 
+                        if( !model.destinationIsReached() )
+                        {
+	                   cout << "CORRECTION APPLIED" << endl;
+                           fprintf(file,"CORRECTION APPLIED\n");
+                           fflush(file);
+
+   		  	   if( model.calculatePathToDest() )
+		           {
+                              model.print(file);
+	                      model.print();
+                              moveRobot(&model, &protocol);
+                     	   }
+			   else
+			   {
+			      cout << "Unable to calculate path to apply a correction. Robot should be close to destination"<<endl;
+                              fprintf(file, "Unable to calculate path to apply a correction. Robot should be close to destination\n");
+                              fflush(file);
+			   }
+		        }
+
+                        fprintf(file,"FINAL\n");				// WRITE TO LCD
+	                fflush(file);
+                        cout << "Now resetting the grid" <<endl;
+	                fprintf(file, "Now Resetting the Grid");
+		        fflush(file);
+
+		        model.print(file);
+		        model.print();
+	                myGrid.resetGrid();
                      }
 	             else
-	             {
-	   	        cout << "Didn't find a tag at final destination, no correction can be applied" << endl;
-                        fprintf(file,"Didn't find a tag at final destination, no correction can be applied\n");
-                        fflush(file);
+ 	             {
+		      // Destination was not reach for some reason (user/Arduino forced the robot to stop with ERROR command)
 	             }
-
-	             /// If the updated position after detecting a tag does not match
-	             //   the final destination, a correction is applied 
-                     if( !model.destinationIsReached() )
-                     {
-	                cout << "CORRECTION APPLIED" << endl;
-                        fprintf(file,"CORRECTION APPLIED\n");
-                        fflush(file);
-
-			if( model.calculatePathToDest() )
-		        {
-                           model.print(file);
-	                   model.print();
-                           moveRobot(&model, &protocol);
-                     	}
-			else
-			{
-			   cout << "Unable to calculate path to apply a correction. Robot should be close to destination"<<endl;
-                           fprintf(file, "Unable to calculate path to apply a correction. Robot should be close to destination\n");
-                           fflush(file);
-			}
-		     }
-
-                     fprintf(file,"FINAL\n");				// WRITE TO LCD
-	             fflush(file);
-                     cout << "Now resetting the grid" <<endl;
-	             fprintf(file, "Now Resetting the Grid");
-		     fflush(file);
-		     model.print(file);
-		     model.print();
-	             myGrid.resetGrid();
                   }
-	          else
- 	          {
-		      // Destination was not reach for some reason (user/Arduino forced the robot to stop with STOP command)
-	          }
+                  else // moveRobot function returned false
+                  {
+                     cout << "An obstacle that was added blocked the path to the destination"<<endl;
+                     fprintf(file,"An obstacle that was added blocked the path to the destination\n");
+                     fflush(file);
+                  }
                }
-	       else // Calculation of the path failed
+	       else // Calculation of the path failed (calculatePathToDest returned false)
 	       {
 		  cout << "Unable to calculate the path. Try another destination"<<endl;
 	 	  fprintf(file,"Unable to calculate the path. Try another destination\n");

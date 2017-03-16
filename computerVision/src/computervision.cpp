@@ -171,8 +171,8 @@ bool computervision::detectTag(int aMaxTagID, int &tagID, double &xCam, double &
         }
 
         imshow("out", imageCopy);
-       	
-	char key = (char)waitKey(waitTime);
+
+	waitKey(waitTime);
     }
     destroyWindow("out");
     return flagCV;

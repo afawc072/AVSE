@@ -1,2 +1,2 @@
 #!/bin/bash
-lxterminal -e ~/git-reps/AVSE/bin/autostart.sh
+lxterminal -hold -e ~/git-reps/AVSE/bin/autostart.sh
