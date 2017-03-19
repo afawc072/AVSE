@@ -85,6 +85,11 @@ float headingOld = 0;
 //float heading = -1.57; //Heading angle of the robot, changed from 0 to prevent wierd first straight line navigation
 //float headingOld = -1.57;
 
+bool forcedErrorN = false; //Variable to be true if an extra forced negative error is applied
+bool forcedErrorP = false; //Variable to be true if an extra forced positive error is applied
+//float forcedError = 0.5;
+float forcedError = 0;
+
 //PID
 float dX; //X difference
 float dY; //Y difference
@@ -102,9 +107,10 @@ float errorD=0; //D error for the PID
 float errorHeading=0;
 float errorPrevious=0; //Extra error for PID calculations
 
-float Kp = 30;
-//float Kp = 50; //P tuning parameter
-float Ki = 1/1000; //I tuning parameter
+//float Kp = 80;
+//float Kp = 100; //Combination 1
+float Kp = 250; //P tuning parameter
+float Ki = 1/100; //I tuning parameter
 float Kd = 0.1; //D tuning parameter
 
 float velocityLeft;
@@ -245,7 +251,7 @@ void loop() {
            leftServo.writeMicroseconds(1355);
            rightServo.writeMicroseconds(1330);
           
-           bool feedback=updateSensors();
+          // bool feedback=updateSensors();
 
            String infoSensor = "";
            int i;      
@@ -271,10 +277,6 @@ void loop() {
       {
          float angle = atof(info.c_str());
 
-          //camAngle function
-          //Angle + 90
-          //GLobal variable camPosition
-          //Verify if angle "directly" or 
           camAngle(angle);
          //test_LED(angle); // temporary test to see if angle was properly received
         
@@ -329,6 +331,22 @@ bool goToGoal(float dX, float dY)
   positionX = 0;
   positionY = 0;
   //heading = 0;
+  heading = errorHeading; //Current change, to be tested
+
+  if(forcedErrorN == true)
+  {
+    goalHeading = goalHeading + forcedError;
+    heading = heading + forcedError;
+    forcedErrorN = false;
+  }
+  if (forcedErrorP == true)
+  {
+    goalHeading = goalHeading - forcedError;
+    heading = heading - forcedError;
+    forcedErrorP = false;
+  }
+  
+  
 
   //Reset odometry
   leftCountNew = 0; 
@@ -347,8 +365,47 @@ bool goToGoal(float dX, float dY)
   {
     getPosition(); //Get position from encoders
    
-    
+    //Atan2 or atan?
+   // goalHeading = atan2(dY,dX);
+   //Double check atan
     goalHeading = atan(dY / dX); //Heading required to reach the goal
+
+    //Serial.println(goalHeading);
+
+
+      if (dX<0)
+      {
+        if(dY>0)
+        {
+          goalHeading = goalHeading + pi;
+        }
+        else if (dY<0)
+        {
+          goalHeading = goalHeading - pi;
+        }
+      }
+   
+    /*if(dX<0) //if position is behind, make angle negative
+    {
+      //PI or MINUS PI based on quadrant???
+      goalHeading = goalHeading + pi ; //get goal in proper quadrant
+
+      //Goal of next if statement is to increase error to force proper robot direction since it is always short
+      //if (dY>0 && forcedErrorN == false && forcedErrorP == false)
+      if (dY>0)
+      {
+        //0.174 rad = 10 degrees
+        goalHeading = goalHeading + forcedError; 
+        forcedErrorN = true;
+      }
+      else
+      {
+        //goalHeading = goalHeading - forcedError;
+        forcedErrorP = true;
+      }
+    }*/
+   //Serial.println(goalHeading);
+    
     errorHeading = goalHeading - heading; //Error with current heading
     errorHeading = atan2(sin(errorHeading),cos(errorHeading)); 
     
@@ -360,17 +417,19 @@ bool goToGoal(float dX, float dY)
   
     float X2 = pow(dX, 2); //dX^2
     float Y2 = pow(dY, 2); //dY^2
-    //Vo=20;
-    //Vo = 2 * sqrt(Y2 + X2); //Translational velocity, currently bassed on distance to goal
-    Vo = 5 * sqrt(Y2 + X2);
+    //Vo=10;
+    //Vo = 20 * sqrt(Y2 + X2); //Combination 1, Translational velocity, currently bassed on distance to goal
+    Vo = 20 * sqrt(Y2 + X2);
   
     
     errorP = errorHeading; //Proportional error
     errorI = errorI + (errorHeading * dt); //Integral error
     errorD = (errorHeading - errorPrevious) / dt; //Derivative error
 
-//    Serial.print("eH: ");
-//    Serial.print(errorHeading);
+    Serial.print("gH: ");
+    Serial.print(goalHeading);
+    Serial.print(" H ");
+    Serial.print(heading);
 //    Serial.print(" DL: ");
 //    Serial.print(distanceLeft);
 //    Serial.print(" DR: ");
@@ -381,10 +440,10 @@ bool goToGoal(float dX, float dY)
 //    Serial.print(leftCountNew);
 //    Serial.print(" RTick: ");
 //    Serial.println(rightCountNew);
-//    Serial.print(" pX: ");
-//    Serial.print(positionX);
-//    Serial.print(" pY: ");
-//    Serial.println(positionY);
+    Serial.print(" pX: ");
+    Serial.print(positionX);
+    Serial.print(" pY: ");
+    Serial.println(positionY);
 //
     Serial.print(""); //WORKAROUND ... to figure out ...
     
@@ -396,8 +455,7 @@ bool goToGoal(float dX, float dY)
     velocityLeft = ((2*Vo - w*wheelBase) / (2*wheelRadiusL)); //Calculated velocity of left wheel
     velocityRight = ((2*Vo + w*wheelBase) / (2*wheelRadiusR)); //Calculated velocity of right wheel
     
-    velocityToPWM();
-    //FUNCTION FOR REACHED 
+    velocityToPWM(); 
     
     flagReach = destinationReached(dX, dY);
   }
@@ -484,6 +542,8 @@ void velocityToPWM()
 
 /*******************************************************************
 * Function to update the left wheel tick count on interrupt
+* If the wheel is going forward, increase
+* If it is going backwards, decrease
 *******************************************************************/
 void updateLeftTick()
 {
@@ -495,13 +555,11 @@ void updateLeftTick()
   {
     leftCountNew++;
   }
-  
-  //leftCountNew++;
 }
 
 /*********************************************************************
 * Function to update the right wheel tick count on interrupt
-* If the wheel is going forward, increase. 
+* If the wheel is going forward, increase
 * If it is going backwards, decrease
 **********************************************************************/
 void updateRightTick()
@@ -514,19 +572,17 @@ void updateRightTick()
   {
     rightCountNew++;
   }
-  
-  //rightCountNew++;
 }
 
 /*******************************************************************
 * Function to verify if the current destination has been reached
-* If the wheel is going forward, increase
-* If it is going backwards, decrease
+* Return true if reached, false otherwise
 *******************************************************************/
 bool destinationReached(float goalX, float goalY)
 {
   //Verify if goal is reached, return true if yes, false if not
-  if (abs(positionX) > abs(goalX) && abs(positionY) > abs(goalY))
+  //MEMO: See if this can be improved to be comre accurate
+  if (abs(positionX) >= abs(goalX) && abs(positionY) >= abs(goalY))
   {
     return true;
   }
@@ -536,6 +592,10 @@ bool destinationReached(float goalX, float goalY)
   }
 }
 
+/**********************************************************************
+ * Function to rotate the camera servo according to the angle provided 
+ * by the Raspberry Pi
+ **********************************************************************/
 void camAngle(int angle)
 {
   //-90 <= angle <= 90
@@ -608,13 +668,13 @@ void test_LED(int n){
            noWarning = false;
         }
       }
-    Serial.print(noWarning);
-  Serial.print(" Distances: ");
-  for(int i = 0; i < SONAR_NUM ; i++){
-    Serial.print(cm[i]);
-    Serial.print("                  ");
-  }
-  Serial.println();
+//    Serial.print(noWarning);
+//  Serial.print(" Distances: ");
+//  for(int i = 0; i < SONAR_NUM ; i++){
+//    Serial.print(cm[i]);
+//    Serial.print("                  ");
+//  }
+//  Serial.println();
     } 
      return noWarning;
 }
