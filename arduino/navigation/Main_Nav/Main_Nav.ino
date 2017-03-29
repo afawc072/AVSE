@@ -10,7 +10,7 @@ Yannick
 #include <NewPing.h>
 
 #define SONAR_NUM     5 // Number of sensors.
-#define CYCLE         5 // Number of cycle
+#define CYCLE         7 // Number of cycle
 #define MAX_DISTANCE 50 // Maximum distance (in cm) to ping.
 #define PING_INTERVAL 50 // Milliseconds between sensor pings (29ms is about the min to avoid cross-sensor echo).
 #define MIN_DISTANCE 15
@@ -21,11 +21,11 @@ uint8_t currentCycle=0;
 uint8_t currentSensor = 0;          // Keeps track of which sensor is active.
 
 NewPing sonar[SONAR_NUM] = {     // Sensor object array.
-  NewPing(28, 30, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
-  NewPing(32, 34, MAX_DISTANCE),
-  NewPing(36, 38, MAX_DISTANCE),
-  NewPing(40, 42, MAX_DISTANCE),
-  NewPing(44, 46, MAX_DISTANCE),
+  NewPing(30, 31, MAX_DISTANCE), // Each sensor's trigger pin, echo pin, and max distance to ping.
+  NewPing(32, 33, MAX_DISTANCE),
+  NewPing(34, 35, MAX_DISTANCE),
+  NewPing(36, 37, MAX_DISTANCE),
+  NewPing(38, 39, MAX_DISTANCE),
 };
 
 /****************
@@ -58,8 +58,8 @@ const float wheelRadiusL = 3;
 const float wheelRadiusR = 3;
 
 //const float wheelBase = 20.25;
-const float wheelBase = 19.05; //In cm
-//const float wheelBase = 18.5;
+//const float wheelBase = 19.05; //In cm
+const float wheelBase = 21;
 
 //Translational Velocity
 double Vo = 0;
@@ -107,9 +107,11 @@ float errorD=0; //D error for the PID
 float errorHeading=0;
 float errorPrevious=0; //Extra error for PID calculations
 
-//float Kp = 80;
+//float Kp = 20;
 //float Kp = 100; //Combination 1
-float Kp = 250; //P tuning parameter
+//float Kp = 300; //P tuning parameter
+float Kp = 300;
+//float Kp = 600;
 float Ki = 1/100; //I tuning parameter
 float Kd = 0.1; //D tuning parameter
 
@@ -165,33 +167,19 @@ void setup() {
 
     leftServo.writeMicroseconds(1355);
     rightServo.writeMicroseconds(1330);
-    cameraServo.write(0);
+    cameraServo.write(88);
 
     /**********
      * Yannick
      *********/
-   //  pingTimer[0] = millis() + 75;           // First ping starts at 75ms, gives time for the Arduino to chill before starting.
-   //  for (uint8_t i = 1; i < SONAR_NUM; i++) // Set the starting time for each sensor.
-   //     pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
+     pingTimer[0] = millis() + 75;           // First ping starts at 75ms, gives time for the Arduino to chill before starting.
+     for (uint8_t i = 1; i < SONAR_NUM; i++) // Set the starting time for each sensor.
+        pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
 
      /***********
       * END Yannick
       ************/
-    
-    /*
-    //CALL FUNCTION FOR SWEEP TO FIND TAG
-    //findFirstTag();
-    //GET POSITION FROM RASPBERRY PI
-    //getInitialPosition();
-    //moving = true;
-    //TEMPORARY VALUES USED FOR TESTING
-    goalX = 0; //X value for testing
-    goalY = 0; //Y value for testing
-    
-    moving = true; //To be changed after integration with Pi to be modified after we get the intial position.
-    */
 }
-
 
 
 /*******************************************************************
@@ -244,6 +232,7 @@ void loop() {
         bool reached = false;
         
         reached = goToGoal(y,-x);
+        
         //test_LED(round(x+y)); //Temporary test to see if vector was properly received
 //        Serial.println("GO TO GOAL");
         if(reached)
@@ -251,7 +240,7 @@ void loop() {
            leftServo.writeMicroseconds(1355);
            rightServo.writeMicroseconds(1330);
           
-          // bool feedback=updateSensors();
+          bool feedback=updateSensors();
 
            String infoSensor = "";
            int i;      
@@ -322,16 +311,14 @@ void sendToPi(String command, String info)
 *******************************************************************/
 bool goToGoal(float dX, float dY)
 { 
-  
-  //Need to reset positionX, positionY, distanceLeft, distanceRight, distanceCenter and heading to 0???
-
+   cameraServo.write(88);
   //***********************************************************
 
   //Reset robot position back to (0,0)
   positionX = 0;
   positionY = 0;
   //heading = 0;
-  heading = errorHeading; //Current change, to be tested
+  heading = errorHeading; //Current heading = errorHeading, if errorHeading = 0 --> current heading = 0
 
   if(forcedErrorN == true)
   {
@@ -347,7 +334,6 @@ bool goToGoal(float dX, float dY)
   }
   
   
-
   //Reset odometry
   leftCountNew = 0; 
   rightCountNew = 0;
@@ -365,25 +351,22 @@ bool goToGoal(float dX, float dY)
   {
     getPosition(); //Get position from encoders
    
-    //Atan2 or atan?
-   // goalHeading = atan2(dY,dX);
-   //Double check atan
     goalHeading = atan(dY / dX); //Heading required to reach the goal
 
     //Serial.println(goalHeading);
 
-
-      if (dX<0)
+      //Point is behind? If yes, correct angle for proper steering
+    if (dX<0)
+    {
+      if(dY>0)
       {
-        if(dY>0)
-        {
-          goalHeading = goalHeading + pi;
-        }
-        else if (dY<0)
-        {
-          goalHeading = goalHeading - pi;
-        }
+        goalHeading = goalHeading + pi;
       }
+      else if (dY<0)
+      {
+        goalHeading = goalHeading - pi;
+      }
+    }
    
     /*if(dX<0) //if position is behind, make angle negative
     {
@@ -419,17 +402,18 @@ bool goToGoal(float dX, float dY)
     float Y2 = pow(dY, 2); //dY^2
     //Vo=10;
     //Vo = 20 * sqrt(Y2 + X2); //Combination 1, Translational velocity, currently bassed on distance to goal
-    Vo = 20 * sqrt(Y2 + X2);
+    Vo = 18 * sqrt(Y2 + X2);
+    //Vo = 30 * sqrt(Y2+X2);
   
     
     errorP = errorHeading; //Proportional error
     errorI = errorI + (errorHeading * dt); //Integral error
     errorD = (errorHeading - errorPrevious) / dt; //Derivative error
 
-    Serial.print("gH: ");
-    Serial.print(goalHeading);
-    Serial.print(" H ");
-    Serial.print(heading);
+//    Serial.print("gH: ");
+//    Serial.print(goalHeading);
+//    Serial.print(" H ");
+//    Serial.println(heading);
 //    Serial.print(" DL: ");
 //    Serial.print(distanceLeft);
 //    Serial.print(" DR: ");
@@ -437,13 +421,13 @@ bool goToGoal(float dX, float dY)
 //    Serial.print(" DCenter: ");
 //    Serial.println(distanceCenter);
 //    Serial.print(" Ltick: ");
-//    Serial.print(leftCountNew);
+//   Serial.print(leftCountNew);
 //    Serial.print(" RTick: ");
 //    Serial.println(rightCountNew);
-    Serial.print(" pX: ");
-    Serial.print(positionX);
-    Serial.print(" pY: ");
-    Serial.println(positionY);
+//    Serial.print(" pX: ");
+//    Serial.print(positionX);
+//    Serial.print(" pY: ");
+//    Serial.println(positionY);
 //
     Serial.print(""); //WORKAROUND ... to figure out ...
     
@@ -524,15 +508,6 @@ void velocityToPWM()
   mappedVelocityLeft = map(velocityLeft, -100, 100, 1025, 1650);
   mappedVelocityRight = map(velocityRight, 100, -100, 1000, 1660);
     
-  //If the wheel is suppose to go in reverse, make it stop as to not mess with the odometry ticks
-  /*if(mappedVelocityLeft <= 1355)
-  {
-    mappedVelocityLeft = 1355;
-  }
-  else if (mappedVelocityRight >=1330)
-  {
-    mappedVelocityRight = 1330;
-  }*/
 
   //Write the speed values into the motors to make them rotate appropriatly
   leftServo.writeMicroseconds(mappedVelocityLeft);
@@ -643,7 +618,8 @@ void test_LED(int n){
   //Serial.println("IN FUNCTION");
     bool noWarning = true;
     // Get measures
-    while(true)
+    bool trigger = true; // Stop the sensor loop when (5xCycle) is finish
+    while(trigger)
     {
     for (currentSensor = 0; currentSensor < SONAR_NUM; currentSensor++) {// Loop through all the sensors.
         float max_dist = -1;
@@ -654,7 +630,7 @@ void test_LED(int n){
            //{
             //  max_dist = temp;
           // }
-           delay(50);
+         //  delay(50);
         //}
         //cm[currentSensor] = max_dist;
         //cm[currentSensor] = sonar[currentSensor].convert_cm(echoTime);                     // Do the ping (processing continues, interrupt will call echoCheck to look for echo).
@@ -673,9 +649,10 @@ void test_LED(int n){
 //  for(int i = 0; i < SONAR_NUM ; i++){
 //    Serial.print(cm[i]);
 //    Serial.print("                  ");
-//  }
+//   }
 //  Serial.println();
+    trigger = false;
     } 
      return noWarning;
-}
+ }
 // 
