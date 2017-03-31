@@ -183,7 +183,7 @@ static bool moveRobot(NavigationModel * apModel, Protocol * apProtocol, int maxT
 	          counterToBreakdownPath = 0;
    	          int tagID;
                   double xTag, zTag, angleCamMarker, camServoAngle;
- 		  printf("Looking for a tag to apply a correction.Ã\n");
+ 		  printf("Looking for a tag to apply a correction.\n");
 //SWEEP TO DETECT TAG
                  if( tagDetection(apProtocol, maxTagID, tagID, xTag, zTag, angleCamMarker, camServoAngle) )
 
@@ -391,7 +391,7 @@ if(false)
             {
                if( !model.setDestination(goal_ix))
                {
-                  printf("Invalid destinationID (needs to be between 0 and %d. Stopping execution.\n",(int) myGrid.getDestPositions().size());
+                  printf("Invalid destinationID (needs to be between 0 and %d. Stopping execution.\n",(int) myGrid.getDestPositions().size()-1);
                   break;
                }
 	       else
