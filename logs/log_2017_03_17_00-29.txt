@@ -1,0 +1,721 @@
+LOG FILE INITIATION
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F D F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+Destination ID is set to 1
+Tag Dectection Process Initiated
+Camera Angle set to: -90.00
+Error Receiving the message back fomr the Arduino: ERRORH
+Camera Angle set to: -90.00
+Camera Angle set to: -45.00
+Camera Angle set to: 0.00
+Tag Detection Process Terminated
+Tag 1, xTag: 26.74, zTag; 67.15, angle: 107.45, camangle: 0.00
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F P P P P P P P P P P P P P P P P P P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (7, 21) 
+Orientation: -129.161657
+------------------------------------------------------------------------------------------------------------------------------
+moveRobot Function Initiated
+Sending position vector: 7.753673,-6.315105
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F P P P P P P P P P P P P P P P P P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (7, 22) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F P P P P P P P P P P P P P P P P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (7, 23) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Tag 5, xTag: 56.32, zTag; 51.04, angle: 66.07, camangle: 0.00
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F P P P P P P P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 23) 
+Orientation: 66.114021
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: -9.143531,4.049178
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F P P P P P P P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 23) 
+Orientation: 66.114021
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F P P P P P P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 24) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F P P P P P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 25) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F P P P P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 26) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F P P P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 27) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F P P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 28) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F P P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 29) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F P P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 30) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F P P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 31) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 0.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F P P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 32) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 49.00,0.00,0.00,-1.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F P P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F O O O F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F O O O F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F O O O F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 33) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 47.00,0.00,0.00,-1.00,0.00
+Sending position vector: 0.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O F F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F P P P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P P P F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F P F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F O O O O F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F O O O O F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F O O O O F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 34) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 46.00,-1.00,0.00,-1.00,0.00
+Sending position vector: -10.000000,10.000000
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O O F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O O F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F P P P P P P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F P O O O F F F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F P O O O F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F O O O F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F O O O O O F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F O O O O O F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F O O O O O F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 35) 
+Orientation: 0.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 43.00,0.00,0.00,-1.00,0.00
+Sending position vector: 0.000000,-14.142136
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O O O O F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O O F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F O O O F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F O O O O P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F O O O O P F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F P F O O O F P F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F P O O O O O P F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F P O O O O O P F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F P O O O O O P F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F P P P P P F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (8, 36) 
+Orientation: -45.000000
+------------------------------------------------------------------------------------------------------------------------------
+Distance Received: 29.00,0.00,0.00,0.00,0.00
+Sending position vector: 0.000000,14.142136
+-------------------------------------------------------NavigationModel--------------------------------------------------------
+The destination is set to cell (5, 43)
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O O O O F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O O F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F O O O O F F F P F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F O O O F P F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F O O O O P F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F O O O O P F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F O O O F P F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F P O O O O O P F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F P O O O O O P F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F P O O O O O P F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F P O O O F P F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F P O O O P F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F P P P F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------Robot------------------------------------------------------------------
+Position: (9, 35) 
+Orientation: 135.000000
+------------------------------------------------------------------------------------------------------------------------------

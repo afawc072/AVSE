@@ -1,0 +1,49 @@
+LOG FILE INITIATION
+
+-------------------------------------------------------GRID-----------------------------------------------------------------
+W W W W W W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+T B B F F F D F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F F D F F F B B T 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W W W W W W W W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W W W W W W T W W W W W W W W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F B B B B B B B B B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F F F F F F F F F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F D F F F F F B B W W B B F F F F F F F F B B B B B B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B W W B B F F F F F F F F B B W T W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F B B B B B B F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F D F F F F F F F B B W 
+T B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B F F F F F F F F F F F F F F F F F F F F F F F B B W W W B B F F F F F F F F F F F F F F B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W B B B B B B B B B B B B B B B B B B B B B B B B B B B W W W B B B B B B B B B B B B B B B B B B W 
+W W W W W W W W W W W W W T W W W W W W W W W W W W W W W W W W W W W W W W W W W T W W W W W W W W 
+------------------------------------------------------------------------------------------------------------------------------
+Destination ID is set to 1
+Tag Dectection Process Initiated
+Camera Angle set to: -90.00
+Error Receiving the message back fomr the Arduino: ERRORH
+Camera Angle set to: -90.00
+Camera Angle set to: -45.00
+Camera Angle set to: 0.00
+Camera Angle set to: 45.00
+Camera Angle set to: 90.00
+Tag Detection Process Terminated
+NOTAG
+Destination ID is set to 1
+Tag Dectection Process Initiated
+Camera Angle set to: -90.00
+Camera Angle set to: -45.00
+Camera Angle set to: 0.00
+Camera Angle set to: 45.00
+Camera Angle set to: 90.00
+Tag Detection Process Terminated
+NOTAG
