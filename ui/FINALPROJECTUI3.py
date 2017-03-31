@@ -1,5 +1,6 @@
 from tkinter import*
 import os,time
+import subprocess
 def start(frame):
     frame.tkraise()
 root = Tk()
@@ -26,37 +27,21 @@ def sequence(*functions):
     return func
 # set up the commands for buttons
 def kitchen():
-    with open('D.txt', 'w') as f:
-        f.write('kitchen')
-    f.close()
+    subprocess.call(["./bin/AVSE","0"])
 def bathroom():
- with open('D.txt', 'w') as f:
-        f.write('bathroom')
- f.close()
+     subprocess.call(["./bin/AVSE","1"])
 def bedroom():
-    with open('D.txt', 'w') as f:
-        f.write('bedroom')
-    f.close()
+     subprocess.call(["./bin/AVSE","2"])
 def game():
-    with open('D.txt', 'w') as f:
-        f.write('game room')
-    f.close()
+     subprocess.call(["./bin/AVSE","3"])
 def loft():
-    with open('D.txt', 'w') as f:
-        f.write('loft')
-    f.close()
+     subprocess.call(["./bin/AVSE","4"])
 def laundry():
-    with open('D.txt', 'w') as f:
-        f.write('laundry')
-    f.close()
+     subprocess.call(["./bin/AVSE","5"])
 def livingroom():
-    with open('D.txt', 'w') as f:
-        f.write('living room')
-    f.close()
+     subprocess.call(["./bin/AVSE","6"])
 def pantry():
-    with open('D.txt', 'w') as f:
-        f.write('pantry')
-    f.close()
+     subprocess.call(["./bin/AVSE","7"])
 
 def arrived():
     start (f11)
