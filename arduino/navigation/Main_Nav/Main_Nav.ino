@@ -51,15 +51,10 @@ byte irRight; //Value of right wheel encoder
 const float pi = 3.1415; //Pi
 const float wheelTicks = 64; //Total ticks per wheel rotation
 
-//const float wheelRadius = 2.7; //In cm
-//const float wheelRadiusL = 2.8; //Radius of left wheel
-//const float wheelRadiusR = 2.9; //Radius of right wheel
-const float wheelRadiusL = 3;
-const float wheelRadiusR = 3;
+const float wheelRadiusL = 3; //Radius of left wheel, in cm
+const float wheelRadiusR = 3; //Radius of right wheel, in cm
 
-//const float wheelBase = 20.25;
-//const float wheelBase = 19.05; //In cm
-const float wheelBase = 21;
+const float wheelBase = 21; //In cm
 
 //Translational Velocity
 double Vo = 0;
@@ -82,8 +77,6 @@ float positionY = 0; //Y position of the robot
 float positionYOld = 0;
 float heading = 0;
 float headingOld = 0;
-//float heading = -1.57; //Heading angle of the robot, changed from 0 to prevent wierd first straight line navigation
-//float headingOld = -1.57;
 
 bool forcedErrorN = false; //Variable to be true if an extra forced negative error is applied
 bool forcedErrorP = false; //Variable to be true if an extra forced positive error is applied
@@ -96,9 +89,6 @@ float dY; //Y difference
 
 float w; //Angular Velocity
 
-
-//float finalX; //Final X position of the destination
-//float finalY; //Final Y position of the destination
 float goalHeading; //Temporary (or final?) goal heading of position to reach
 
 float errorP=0; //P error for the PID
@@ -107,13 +97,9 @@ float errorD=0; //D error for the PID
 float errorHeading=0;
 float errorPrevious=0; //Extra error for PID calculations
 
-//float Kp = 20;
-//float Kp = 100; //Combination 1
-//float Kp = 300; //P tuning parameter
-float Kp = 300;
-//float Kp = 600;
-float Ki = 1/100; //I tuning parameter
-float Kd = 0.1; //D tuning parameter
+float Kp = 100; //P tuning parameter
+float Ki = 1/10; //I tuning parameter
+float Kd = 0.5; //D tuning parameter
 
 float velocityLeft;
 float velocityRight;
@@ -152,6 +138,7 @@ char MSG_END = ']';
 void setup() {
   
     Serial.begin(9600);
+    Serial.setTimeout(50);
     pinMode(2,INPUT); //irLeft input pin
     pinMode(3,INPUT); //irRight input pin
     
@@ -169,16 +156,6 @@ void setup() {
     rightServo.writeMicroseconds(1330);
     cameraServo.write(88);
 
-    /**********
-     * Yannick
-     *********/
-     pingTimer[0] = millis() + 75;           // First ping starts at 75ms, gives time for the Arduino to chill before starting.
-     for (uint8_t i = 1; i < SONAR_NUM; i++) // Set the starting time for each sensor.
-        pingTimer[i] = pingTimer[i - 1] + PING_INTERVAL;
-
-     /***********
-      * END Yannick
-      ************/
 }
 
 
@@ -222,7 +199,6 @@ void loop() {
       else if(cmd.equals("NEXT"))
       { 
 
-  //      Serial.println("test");
         // Get the x and y distances       
         float x, y;
         char* y_char = strchr(info.c_str(),',');
@@ -233,8 +209,6 @@ void loop() {
         
         reached = goToGoal(y,-x);
         
-        //test_LED(round(x+y)); //Temporary test to see if vector was properly received
-//        Serial.println("GO TO GOAL");
         if(reached)
         {  
            leftServo.writeMicroseconds(1355);
@@ -267,7 +241,6 @@ void loop() {
          float angle = atof(info.c_str());
 
           camAngle(angle);
-         //test_LED(angle); // temporary test to see if angle was properly received
         
          bool flagCam = true;    
            
@@ -317,22 +290,8 @@ bool goToGoal(float dX, float dY)
   //Reset robot position back to (0,0)
   positionX = 0;
   positionY = 0;
-  //heading = 0;
   heading = errorHeading; //Current heading = errorHeading, if errorHeading = 0 --> current heading = 0
 
-  if(forcedErrorN == true)
-  {
-    goalHeading = goalHeading + forcedError;
-    heading = heading + forcedError;
-    forcedErrorN = false;
-  }
-  if (forcedErrorP == true)
-  {
-    goalHeading = goalHeading - forcedError;
-    heading = heading - forcedError;
-    forcedErrorP = false;
-  }
-  
   
   //Reset odometry
   leftCountNew = 0; 
@@ -353,41 +312,18 @@ bool goToGoal(float dX, float dY)
    
     goalHeading = atan(dY / dX); //Heading required to reach the goal
 
-    //Serial.println(goalHeading);
-
-      //Point is behind? If yes, correct angle for proper steering
+    //Point is behind? If yes, correct angle for proper steering
     if (dX<0)
     {
       if(dY>0)
       {
         goalHeading = goalHeading + pi;
       }
-      else if (dY<0)
+      else if (dY<=0)
       {
         goalHeading = goalHeading - pi;
       }
     }
-   
-    /*if(dX<0) //if position is behind, make angle negative
-    {
-      //PI or MINUS PI based on quadrant???
-      goalHeading = goalHeading + pi ; //get goal in proper quadrant
-
-      //Goal of next if statement is to increase error to force proper robot direction since it is always short
-      //if (dY>0 && forcedErrorN == false && forcedErrorP == false)
-      if (dY>0)
-      {
-        //0.174 rad = 10 degrees
-        goalHeading = goalHeading + forcedError; 
-        forcedErrorN = true;
-      }
-      else
-      {
-        //goalHeading = goalHeading - forcedError;
-        forcedErrorP = true;
-      }
-    }*/
-   //Serial.println(goalHeading);
     
     errorHeading = goalHeading - heading; //Error with current heading
     errorHeading = atan2(sin(errorHeading),cos(errorHeading)); 
@@ -400,16 +336,14 @@ bool goToGoal(float dX, float dY)
   
     float X2 = pow(dX, 2); //dX^2
     float Y2 = pow(dY, 2); //dY^2
-    //Vo=10;
-    //Vo = 20 * sqrt(Y2 + X2); //Combination 1, Translational velocity, currently bassed on distance to goal
-    Vo = 18 * sqrt(Y2 + X2);
-    //Vo = 30 * sqrt(Y2+X2);
+    Vo = 12 * sqrt(Y2 + X2);
   
     
     errorP = errorHeading; //Proportional error
     errorI = errorI + (errorHeading * dt); //Integral error
     errorD = (errorHeading - errorPrevious) / dt; //Derivative error
 
+//Print to test various issues
 //    Serial.print("gH: ");
 //    Serial.print(goalHeading);
 //    Serial.print(" H ");
@@ -421,7 +355,7 @@ bool goToGoal(float dX, float dY)
 //    Serial.print(" DCenter: ");
 //    Serial.println(distanceCenter);
 //    Serial.print(" Ltick: ");
-//   Serial.print(leftCountNew);
+//    Serial.print(leftCountNew);
 //    Serial.print(" RTick: ");
 //    Serial.println(rightCountNew);
 //    Serial.print(" pX: ");
@@ -615,7 +549,7 @@ void test_LED(int n){
 *******************************************************************/
 
  bool updateSensors(){
-  //Serial.println("IN FUNCTION");
+
     bool noWarning = true;
     // Get measures
     bool trigger = true; // Stop the sensor loop when (5xCycle) is finish
@@ -623,36 +557,17 @@ void test_LED(int n){
     {
     for (currentSensor = 0; currentSensor < SONAR_NUM; currentSensor++) {// Loop through all the sensors.
         float max_dist = -1;
-       // for(int i = 0 ; i < 3 ; i++)
-       // {
            cm[currentSensor] = sonar[currentSensor].ping_median(CYCLE) / US_ROUNDTRIP_CM;
-          // if(temp>max_dist)
-           //{
-            //  max_dist = temp;
-          // }
-         //  delay(50);
-        //}
-        //cm[currentSensor] = max_dist;
-        //cm[currentSensor] = sonar[currentSensor].convert_cm(echoTime);                     // Do the ping (processing continues, interrupt will call echoCheck to look for echo).
-//           Serial.print(currentSensor);
-//  Serial.print(" ");
-//  Serial.println(cm[currentSensor]);
+
         if(cm[currentSensor] != 0 && cm[currentSensor] < MIN_DISTANCE)
         {
-      //b    Serial.println("FUNCTION FALSE");
            cm[currentSensor] = -1;
            noWarning = false;
         }
       }
-//    Serial.print(noWarning);
-//  Serial.print(" Distances: ");
-//  for(int i = 0; i < SONAR_NUM ; i++){
-//    Serial.print(cm[i]);
-//    Serial.print("                  ");
-//   }
-//  Serial.println();
+
     trigger = false;
     } 
      return noWarning;
  }
-// 
+
